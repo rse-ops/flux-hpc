@@ -39,7 +39,7 @@ jobs:
       with: 
         root: ${{ steps.parsed_files.outputs.parsed_files }}
         parser: dockerbuild
-        flags: "--all"
+        flags: "--registry ghcr.io/rse-ops --all"
 
     - name: View and Check Build Matrix Result
       env:
