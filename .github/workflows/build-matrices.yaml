@@ -121,7 +121,7 @@ jobs:
         context: ${{ env.dockerfile_dir }}
         file: ${{ env.filename }}
         platforms: ${{ matrix.arch[0] }}
-        push: "${{ github.event_name != 'pull_request' }}"
+        push: ${{ github.event_name != 'pull_request' }}
         build-args: |
           ${{ env.build_args }}
         tags: ghcr.io/rse-ops/${{ env.container }}
