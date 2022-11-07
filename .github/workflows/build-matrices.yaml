@@ -21,13 +21,25 @@ jobs:
       with:
         fetch-depth: 0
 
+    - name: Get changed files
+      id: changed-files
+      uses: tj-actions/changed-files@aa52cfcd81f1a00a6bf1241a8cad6adec4d80638 # v33
+      with:
+        separator: " "
+
+    - name: Convert changed Dockerfile to uptodate
+      id: parsed_files
+      env:
+        changed_files: ${{ steps.changed-files.outputs.all_changed_files }}
+      run: /bin/bash .github/scripts/prepare_paths.sh
+
     - name: Generate Build Matrix
       uses: vsoch/uptodate@main
       id: dockerbuild
-      with:
-        root: .
+      with: 
+        root: ${{ steps.parsed_files.outputs.parsed_files }}
         parser: dockerbuild
-        flags: --all
+        flags: "--registry ghcr.io/rse-ops --all"
 
     - name: View and Check Build Matrix Result
       env:
@@ -104,6 +116,7 @@ jobs:
         echo "filename=${filename}" >> $GITHUB_ENV
 
     - name: Build ${{ matrix.dockerfile[1] }}
+      if: (github.event_name != 'pull_request')
       uses: docker/build-push-action@v3
       with:
         context: ${{ env.dockerfile_dir }}
