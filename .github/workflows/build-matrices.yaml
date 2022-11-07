@@ -39,7 +39,7 @@ jobs:
       with: 
         root: ${{ steps.parsed_files.outputs.parsed_files }}
         parser: dockerbuild
-        flags: "--registry ghcr.io/rse-ops --all"
+        flags: "--all"
 
     - name: View and Check Build Matrix Result
       env:
@@ -116,13 +116,12 @@ jobs:
         echo "filename=${filename}" >> $GITHUB_ENV
 
     - name: Build ${{ matrix.dockerfile[1] }}
-      if: (github.event_name != 'pull_request')
       uses: docker/build-push-action@v3
       with:
         context: ${{ env.dockerfile_dir }}
         file: ${{ env.filename }}
         platforms: ${{ matrix.arch[0] }}
-        push: ${{ github.event_name != 'pull_request' }}
+        push: "${{ github.event_name != 'pull_request' }}"
         build-args: |
           ${{ env.build_args }}
         tags: ghcr.io/rse-ops/${{ env.container }}
