@@ -6,6 +6,9 @@ in the container, and you can use with the [Flux Operator](https://github.com/fl
 However, this isn't required - you can use the container to test the HPC app
 regardless of Flux!
 
+The builds are done via [this workflow](.github/workflows/build-matrices.yaml)
+that uses [uptodate](https://github.com/vsoch/uptodate) on changed files.
+
 ## Containers
 
 The following automated builds are provided:
