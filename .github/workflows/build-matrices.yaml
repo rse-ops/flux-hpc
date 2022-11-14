@@ -124,4 +124,4 @@ jobs:
         push: ${{ github.event_name != 'pull_request' }}
         build-args: |
           ${{ env.build_args }}
-        tags: ghcr.io/rse-ops/${{ env.container }}
+        tags: ${{ env.container }}
