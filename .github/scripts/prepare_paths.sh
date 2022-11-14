@@ -6,7 +6,7 @@ for file in ${changed_files}; do
     filename=$(basename ${file})
 
     # In this case, we just have one uptodate per recipe!
-    if [[ "$filename" == "uptodate.yaml" ]]; then
+    if [[ "$filename" == "Dockerfile" ]]; then
         parsed="${parsed} ${file}"
     fi
 done
