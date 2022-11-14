@@ -6,7 +6,7 @@ ENV build_jobs=${build_jobs}
 # docker build --build-arg flux_sched_tag=focal -t ghcr.io/rse-ops/lammps-mpi:focal .
 
 # Potential entrypoint:
-#    mpirun -x PATH -np 2 --map-by socket lmp -v x 2 -v y 2 -v z 2 -in in.reaxc.hns -nocite
+#   mpirun -x PATH -np 2 --map-by socket lmp -v x 2 -v y 2 -v z 2 -in in.reaxc.hns -nocite
 
 ENV DEBIAN_FRONTEND=noninteractive
 
