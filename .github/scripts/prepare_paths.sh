@@ -7,7 +7,8 @@ for file in ${changed_files}; do
 
     # In this case, we just have one uptodate per recipe!
     if [[ "$filename" == "Dockerfile" ]]; then
-        parsed="${parsed} ${file}"
+        folder=$(dirname ${file})
+        parsed="${parsed} ${folder}"
     fi
 done
 echo ${parsed}
