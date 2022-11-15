@@ -2,5 +2,6 @@ dockerbuild:
 
   build_args:
     tag:
+      key: "app"
       versions:
        - "latest"
