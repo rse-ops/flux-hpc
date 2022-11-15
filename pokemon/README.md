@@ -23,5 +23,5 @@ pokemon --catch
 
 And then browse to the table and click on the ID to see the log.
 
-![img/jog.png](img/jog.png)
+![img/log.png](img/log.png)
 
