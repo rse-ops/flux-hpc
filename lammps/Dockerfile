@@ -7,6 +7,10 @@ ENV build_jobs=${build_jobs}
 
 # Potential entrypoint:
 #    mpirun -x PATH -np 2 --map-by socket lmp -v x 2 -v y 2 -v z 2 -in in.reaxc.hns -nocite
+# To run with flux
+#    flux start --test-size=4 
+#    flux mini submit lmp -v x 2 -v y 2 -v z 2 -in in.reaxc.hns -nocite
+#    flux job attach <outid>
 
 ENV DEBIAN_FRONTEND=noninteractive
 
