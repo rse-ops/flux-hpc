@@ -10,7 +10,7 @@ $ docker run -it -p 5000:5000 app-test
 And then enter the fluxuser and 123456 as the user and token, and try submitting a job to
 the examples like:
 
-```
+```console
 # Potential command and workdir
 #    command: lmp -v x 2 -v y 2 -v z 2 -in in.reaxc.hns -nocite
 #    workdir: /home/flux/examples/reaxff/HNS
