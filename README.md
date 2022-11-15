@@ -13,7 +13,8 @@ that uses [uptodate](https://github.com/vsoch/uptodate) on changed files.
 
 The following automated builds are provided:
 
- - [lammps-mpi](lammps-mpi): A demo mpi container that can be used for a MiniCluster
+ - [lammps](lammps): A demo container with lammps that can be used for a MiniCluster or on its own
+ - [pokemon](pokemon): A demo container with the Flux RESTFul API installed and `pokemon --catch`!
 
 
 ## Flux Operator
@@ -28,9 +29,11 @@ so that the install locations are consistent. This assumes that:
  - If you haven't created a flux user, one will be created for you (with a common user id 1234)
  - Any executables that the flux user needs for your job should be on the path.
  - The container (for now) should start with user root, and we run commands on behalf of flux.
+ - You don't need to install the flux-restful-api (it will be installed by the operator)
   
 If you intend to use the [Flux RESTful API](https://github.com/flux-framework/flux-restful-api)
-to interact with your cluster, ensure that flux (python bindings) are on the path.
+to interact with your cluster, ensure that flux (python bindings) are on the path, along with
+either python or python3 (depending on which you used to install Flux).
 If/when needed we can lift some of these constraints, but for now they are 
 reasonable.
 
