@@ -4,4 +4,4 @@ dockerbuild:
     app:
       key: app
       versions:
-       - "ghcr.io/rse-ops/lammps-mpi:flux-sched-focal-v0.24.0"
+       - "flux-sched-focal-v0.24.0"
