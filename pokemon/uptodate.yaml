@@ -1,0 +1,6 @@
+dockerbuild:
+
+  build_args:
+    tag:
+      versions:
+       - latest
