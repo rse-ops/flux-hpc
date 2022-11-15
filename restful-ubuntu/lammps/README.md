@@ -16,4 +16,11 @@ the examples like:
 #    workdir: /home/flux/examples/reaxff/HNS
 ```
 
+![img/submit.png](img/submit.png)
+
+And then browse to the table and click on the ID to see the log.
+
+![img/log.png](img/log.png)
+
+
 You can also try using the [RESTFul API](https://flux-framework.org/flux-restful-api/getting_started/user-guide.html#getting-started-user-guide--page-root). Have fun!
