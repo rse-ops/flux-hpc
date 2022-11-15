@@ -1,5 +1,5 @@
 ARG app
-FROM ghcr.io/rse-ops/lammps-mpi:${app}
+FROM ghcr.io/rse-ops/lammps:${app}
 ARG FLUX_USER="fluxuser"
 ARG FLUX_TOKEN="123456"
 
