@@ -8,7 +8,12 @@ for file in ${changed_files}; do
     # In this case, we just have one uptodate per recipe!
     if [[ "$filename" == "Dockerfile" ]]; then
         folder=$(dirname ${file})
-        parsed="${parsed} ${folder}"
+        ignorefile=${folder}/.uptodate-ignore
+
+        # Ignore these directories
+        if [[ ! -f "$ignorefile" ]]; then
+            parsed="${parsed} ${folder}"
+        fi
     fi
 done
 echo ${parsed}
