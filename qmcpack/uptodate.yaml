@@ -1,0 +1,7 @@
+dockerbuild:
+
+  build_args:
+    qmcpack_version:
+      key: qmcpack
+      versions:
+       - 3.13.0
