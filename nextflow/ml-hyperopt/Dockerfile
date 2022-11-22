@@ -3,6 +3,7 @@ FROM ghcr.io/flux-framework/flux-restful-api:${flux_restful_tag}
 
 # docker build -t nextflow .
 # command: nextflow -c nextflow.config run main.nf -profile flux
+# launcher: checked
 # workdir: /workflow
 
 USER root

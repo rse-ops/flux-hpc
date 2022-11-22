@@ -47,7 +47,7 @@ the examples like:
 ```console
 # Potential command and workdir
 # command: nextflow -c nextflow.config run main.nf -profile flux
-# laucher (checked)
+# launcher (checked)
 # workdir: /workflow
 ```
 
