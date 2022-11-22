@@ -22,8 +22,11 @@ profiles {
     flux {
         process.executor = 'flux'
         process.conda = "$baseDir/conda.yml"
+        process.terminal_output = true
     }
 ```
+
+Note that `process.terminal_output = true` is needed for flux to be able to see the log output!
 
 ## Running the Workflow
 
@@ -59,13 +62,16 @@ environment, but in our single container it would freeze.
 
 You'll notice you don't get an ID back, but an instruction to look at the table.
 
-
 ![img/table.png](img/table.png)
 
 The reason is because Nextflow has submit many flux jobs on our behalf!
-Note that @vsoch is currently figuring out how to print logs to stdout, so
-you won't see any output under each of the jobs (yet). You'll actually see the
-high level output in the terminal, however:
+If you click on a job, given that you've set `process.terminal_output = true`
+in the nextflow configuration, you should see logs:
+
+![img/log.png](img/log.png)
+
+You'll also see the output from the main calling process in the terminal:
+
 
 ```console
 ...
