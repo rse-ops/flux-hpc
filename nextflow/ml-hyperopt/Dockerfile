@@ -26,7 +26,7 @@ COPY ./setup.sh ./
 RUN /bin/bash setup.sh
 
 # Install nextflow from source (since Flux not in release yet)
-RUN git clone --depth 1 --branch fix/flux-executor-output https://github.com/researchapps/nextflow /nextflow && \
+RUN git clone --depth 1 https://github.com/nextflow-io/nextflow /nextflow && \
     cd /nextflow && \
     make compile && make pack && make install && \
     # This finishes getting some deps

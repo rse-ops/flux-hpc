@@ -22,11 +22,13 @@ profiles {
     flux {
         process.executor = 'flux'
         process.conda = "$baseDir/conda.yml"
-        process.terminal_output = true
+        flux {
+            terminalOutput = true
+        }
     }
 ```
 
-Note that `process.terminal_output = true` is needed for flux to be able to see the log output!
+Note that `process.terminalOutput = true` is needed for flux to be able to see the log output!
 
 ## Running the Workflow
 
