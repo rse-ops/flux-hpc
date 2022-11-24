@@ -67,7 +67,7 @@ You'll notice you don't get an ID back, but an instruction to look at the table.
 ![img/table.png](img/table.png)
 
 The reason is because Nextflow has submit many flux jobs on our behalf!
-If you click on a job, given that you've set `process.terminal_output = true`
+If you click on a job, given that you've set the `terminalOutput` to be true,
 in the nextflow configuration, you should see logs:
 
 ![img/log.png](img/log.png)

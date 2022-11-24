@@ -33,7 +33,7 @@ RUN git clone --depth 1 https://github.com/nextflow-io/nextflow /nextflow && \
     /nextflow/nextflow -h
 COPY ./nextflow.config /workflow/nextflow.config
 ENV PATH=/nextflow:$PATH    
-    
+# ENV NXF_VER=22.11.0-edge 
 # This is probably cheating a bit :)
 # instead of altering the entrypoint to active the environment!
 ENV PATH=/root/micromamba/envs/nf/bin:$PATH
