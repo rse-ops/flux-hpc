@@ -103,6 +103,31 @@ RUN git clone --depth 1 https://github.com/ULHPC/tutorials /opt/tutorials && \
 # The script below borks without this.
 ENV SPACK_ROOT=/opt/spack-environment/spack
 
+# We must have flux user!
+
+# Install extra buildrequires for flux-sched:
+RUN sudo apt-get update
+RUN sudo apt-get -qq install -y --no-install-recommends \
+	libboost-graph-dev \
+	libboost-system-dev \
+	libboost-filesystem-dev \
+	libboost-regex-dev \
+	python-yaml \
+	libyaml-cpp-dev \
+	libedit-dev
+
+# Add configured user to image with sudo access:
+#
+ARG USER=flux
+ARG UID=1000
+RUN \
+ if test "$USER" != "flux"; then  \
+      sudo groupadd -g $UID $USER \
+   && sudo useradd -g $USER -u $UID -d /home/$USER -m $USER \
+   && sudo sh -c "printf \"$USER ALL= NOPASSWD: ALL\\n\" >> /etc/sudoers" \
+   && sudo adduser $USER sudo ; \
+ fi
+
 # This must be set to work (username / token set won't trigger it alone)
 ARG use_auth
 ARG user="fluxuser"
