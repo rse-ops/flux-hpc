@@ -131,5 +131,26 @@ ENV FLUX_OPTION_FLAGS="-ompi=openmpi@5"
 COPY ./entrypoint.sh /code/entrypoint.sh
 ENTRYPOINT ["/code/entrypoint.sh"]
 
+# This is dumping out the spack environment so the operator can use it
+ENV SPACK_ENV=/opt/spack-environment;
+ENV ACLOCAL_PATH=/opt/view/share/aclocal:/usr/share/aclocal;
+ENV CMAKE_PREFIX_PATH=/opt/view;
+ENV CPATH=/opt/software/linux-ubuntu20.04-x86_64/gcc-9.4.0/python-3.10.8-qh3hml3swbcfbaaqf2o4pxz4752mticr/include/python3.10;
+ENV FLUX_CONNECTOR_PATH=/opt/view/lib/flux/connectors;
+ENV FLUX_EXEC_PATH=/opt/view/libexec/flux/cmd;
+ENV FLUX_MODULE_PATH=/opt/view/lib/flux/modules:/opt/view/lib/flux/modules/sched;
+ENV FLUX_RC_EXTRA=/opt/view/etc/flux;
+ENV FLUX_SHELL_RC_PATH=/opt/view/etc/flux/shell/lua.d;
+ENV LUA_CPATH='/opt/view/lib/lua/5.3/?.so;/opt/view/lib/lua/5.3/?.so;/opt/view/lib/lua/5.3/?.so';
+ENV LUA_PATH='/opt/view/lib/lua/5.3/?/init.lua;/opt/view/lib/lua/5.3/?.lua;/opt/view/share/lua/5.3/?/init.lua;/opt/view/share/lua/5.3/?.lua;/opt/view/share/lua/5.3/?.lua;/opt/view/share/lua/5.3/?.lua';
+ENV MANPATH=/opt/view/share/man:/opt/view/man:/usr/share/man:;
+ENV MPICC=/opt/view/bin/mpicc;
+ENV MPICXX=/opt/view/bin/mpic++;
+ENV MPIF77=/opt/view/bin/mpif77;
+ENV MPIF90=/opt/view/bin/mpif90;
+ENV PATH=/opt/view/bin:/opt/spack-environment/spack/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin;
+ENV PKG_CONFIG_PATH=/opt/view/lib/pkgconfig:/usr/share/pkgconfig:/opt/view/share/pkgconfig:/opt/view/lib64/pkgconfig;
+ENV PYTHONPATH=/opt/view/lib/python3.10/site-packages:/opt/software/linux-ubuntu20.04-x86_64/gcc-9.4.0/py-pyrsistent-0.18.1-4y45yicct333hekudm6spwmfo4zurvir/lib/python3.10/site-packages:/opt/software/linux-ubuntu20.04-x86_64/gcc-9.4.0/py-attrs-22.1.0-6l7qhin5aaqyev56skpsvruxox2ywn3s/lib/python3.10/site-packages:/opt/software/linux-ubuntu20.04-x86_64/gcc-9.4.0/py-pycparser-2.21-7seqp6a5ivvr4t3xygon2ttiyh55bbm6/lib/python3.10/site-packages:/opt/software/linux-ubuntu20.04-x86_64/gcc-9.4.0/py-pyyaml-6.0-ayf2ig4btgiev7ir675l7oywhvgl7rhs/lib/python3.10/site-packages:/opt/software/linux-ubuntu20.04-x86_64/gcc-9.4.0/py-jsonschema-4.16.0-6zl5yjunrcsn4zpywynn5oph32iqlvou/lib/python3.10/site-packages:/opt/software/linux-ubuntu20.04-x86_64/gcc-9.4.0/py-cffi-1.15.0-gyk2my27jc3b5gno4zcqtm3riumyl4vp/lib/python3.10/site-packages;
+
 # Just for demo!
 ENV FLUX_REQUIRE_AUTH="true"
