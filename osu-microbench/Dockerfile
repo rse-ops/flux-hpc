@@ -30,6 +30,7 @@ RUN apt-get update && \
     fftw3-dev fftw3 \
     apt-utils \
     pdsh \
+    sudo \
     dnsutils \
     wget \
     && apt-get clean \
