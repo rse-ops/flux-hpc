@@ -14,15 +14,14 @@ docker run -it --entrypoint bash clc
 Make sure flux is on the path (if not, source the environment)
 
 ```bash
+. /etc/profile.d/z10_spack_environment.sh
 flux start --test-size=4
 ```
-```bash
-# if you changed the envtrypoint and don't see flux
-. /etc/profile.d/z10_spack_environment.sh
-```
+
 And now activate conveyorlc with nix (workdir should be `/code/nix`)
 
 ```bash
+cd /code/nix
 nix develop
 ```
 
@@ -66,10 +65,18 @@ $ docker run -it -p 5000:5000 clc
 The login should be `fluxuser` and "12345".
 In the job submit interface, specify the correct command and working directory:
 
+![img/submit.png](img/submit.png)
+
 ```
-# workdir: /code/examples
-# command: CDT1Receptor --input  pdb.list --output out --version 16 --spacing 1.4 --minimize on --forceRedo on
+# workdir: /code/nix
+# command: nix develop -c /bin/bash ./run.sh
 # number of tasks: 2
 ```
 
-WIP - this is currently running, and if it works in the terminal I'll try adding the UI next.
+This command takes a lot of resources so (for me) I couldn't load the UI after that,
+but I could shell into the running container to see the CPU with top and that the script
+was running. After about 45 minutes when I saw those go away I could then refresh and see the interface
+(and output results):
+
+![img/log.png](img/log.png)
+
