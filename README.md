@@ -8,13 +8,8 @@ regardless of Flux!
 
 The builds are done via [this workflow](.github/workflows/build-matrices.yaml)
 that uses [uptodate](https://github.com/vsoch/uptodate) on changed files.
-
-## Containers
-
-The following automated builds are provided:
-
- - [lammps](lammps): A demo container with lammps that can be used for a MiniCluster or on its own
- - [pokemon](pokemon): A demo container with the Flux RESTFul API installed and `pokemon --catch`!
+Automated builds for each subdirectory is provided, and these examples
+are intending to be ported to be run with the Flux Operator.
 
 
 ## Flux Operator
@@ -35,7 +30,8 @@ If you intend to use the [Flux RESTful API](https://github.com/flux-framework/fl
 to interact with your cluster, ensure that flux (python bindings) are on the path, along with
 either python or python3 (depending on which you used to install Flux).
 If/when needed we can lift some of these constraints, but for now they are 
-reasonable.
+reasonable. Note that we will soon be moving the instructions above to live alongside
+the operator, but will keep them here until we do.
 
 License
 -------
