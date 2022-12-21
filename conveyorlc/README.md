@@ -80,3 +80,6 @@ was running. After about 45 minutes when I saw those go away I could then refres
 
 ![img/log.png](img/log.png)
 
+**note** that we couldn't get this variant working with the operator, and are
+going to try with the [spack equivalent](../conveyorlc-spack) that won't require
+sourcing two environments!
