@@ -1,0 +1,6 @@
+dockerbuild:
+  build_args:
+    ubuntu:
+      key: "ubuntu"
+      versions:
+       - "20.04"

@@ -1,0 +1,13 @@
+name: amber
+channels:
+  - conda-forge
+  - bioconda
+  - anaconda
+  - defaults
+dependencies:
+  - numpy
+  - ambertools
+  - scipy
+  - matplotlib 
+  - setuptools
+  - mpi4py
