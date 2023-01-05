@@ -1,0 +1,7 @@
+dockerbuild:
+
+  build_args:
+    app:
+      key: app
+      versions:
+       - "flux-sched-focal-v0.24.0"
