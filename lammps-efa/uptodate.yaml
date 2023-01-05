@@ -1,7 +1,7 @@
 dockerbuild:
 
   build_args:
-    app:
-      key: app
+    ubuntu_version:
+      key: ubuntu
       versions:
-       - "flux-sched-focal-v0.24.0"
+       - "20.04"
