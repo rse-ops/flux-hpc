@@ -9,6 +9,12 @@ ENV FI_EFA_USE_DEVICE_RDMA=1
 ENV RDMAV_FORK_SAFE=1
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Install time for timed commands
+RUN apt-get update && apt-get install -y time && \
+    apt-get clean && \
+    apt-get autoremove && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 # install laamps
 USER root
 RUN git clone --depth 1 --branch stable_29Sep2021_update2 https://github.com/lammps/lammps.git /opt/lammps && \
