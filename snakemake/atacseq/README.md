@@ -57,7 +57,7 @@ $ docker run -it --entrypoint bash snakemake
 Activate the environment:
 
 ```bash
-$ micromamba shell init --shell=bash --prefix=~/micromamba
+$ micromamba shell init --shell=bash --prefix=/opt/micromamba
 $ source /root/.bashrc
 $ eval $(micromamba shell hook --shell=bash)
 $ micromamba activate snakemake

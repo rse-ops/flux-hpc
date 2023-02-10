@@ -6,5 +6,6 @@ set -eEu -o pipefail
 curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest | tar -xvj bin/micromamba
 mv bin/micromamba /usr/local/bin && rmdir bin
 which micromamba
-micromamba create --prefix snakemake -f environment.yaml
-micromamba shell init --shell=bash --prefix=~/micromamba
+mkdir -p /opt/micromamba/envs
+micromamba create --prefix /opt/micromamba/envs/snakemake -f environment.yaml
+micromamba shell init --shell=bash --prefix=/opt/micromamba
