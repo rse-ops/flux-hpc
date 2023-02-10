@@ -26,5 +26,5 @@ COPY ./scripts/plot-quals.py ./scripts/plot-quals.py
 
 # This is probably cheating a bit :)
 # instead of altering the entrypoint to active the environment!
-ENV PATH=/root/micromamba/envs/snakemake/bin:$PATH
+ENV PATH=/opt/micromamba/envs/snakemake/bin:$PATH
 WORKDIR /code
