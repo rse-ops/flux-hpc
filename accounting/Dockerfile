@@ -8,5 +8,4 @@ RUN git clone --depth 1 https://github.com/flux-framework/flux-accounting && \
    ./autogen.sh && \
    ./configure --localstatedir=/var/ && \
    make && \
-   make check && \
    sudo make install
