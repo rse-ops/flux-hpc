@@ -4,4 +4,4 @@ dockerbuild:
     tag:
       key: "app"
       versions:
-       - "latest"
+       - "focal"
