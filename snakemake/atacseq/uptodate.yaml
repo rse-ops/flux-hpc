@@ -1,7 +1,7 @@
 dockerbuild:
 
   build_args:
-    flux_restful_tag:
+    tag:
       key: app
       versions:
        - latest

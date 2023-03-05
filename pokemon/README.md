@@ -12,7 +12,7 @@ And run:
 $ docker run -it -p 5000:5000 pokemon
 ```
 
-The login should be `fluxuser` and "12345".
+If you've added `FLUX_ENABLE_AUTH=true` the login should be `fluxuser` and "12345".
 In the job submit interface, catch a pokemon!
 
 ```

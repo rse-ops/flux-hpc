@@ -12,10 +12,11 @@ And run:
 $ docker run -it -p 5000:5000 hello-world
 ```
 
-The login should be `fluxuser` and "12345".
+If you have set `FLUX_REQUIRE_AUTH` to true in the Dockerfile,
+the login should be `fluxuser` and "12345".
 In the job submit interface, echo hello world:
 
-```
+```bash
 echo hello world
 ```
 
