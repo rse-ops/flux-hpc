@@ -1,16 +1,17 @@
-ARG flux_sched_tag
-FROM fluxrm/flux-sched:${flux_sched_tag}
+ARG tag=focal
+FROM fluxrm/flux-sched:${tag}
 ARG build_jobs=6
 ENV build_jobs=${build_jobs}
 
-# docker build --build-arg flux_sched_tag=focal -t ghcr.io/rse-ops/lammps-mpi:focal .
+# docker build --build-arg tag=focal -t ghcr.io/rse-ops/lammps-mpi:focal .
 
 # Potential entrypoint:
 #    mpirun -x PATH -np 2 --map-by socket lmp -v x 2 -v y 2 -v z 2 -in in.reaxc.hns -nocite
 # To run with flux
 #    flux start --test-size=4 
-#    flux mini submit lmp -v x 2 -v y 2 -v z 2 -in in.reaxc.hns -nocite
+#    flux submit lmp -v x 1 -v y 1 -v z 1 -in in.reaxc.hns -nocite
 #    flux job attach <outid>
+#    flux run lmp -v x 1 -v y 1 -v z 1 -in in.reaxc.hns -nocite
 
 ENV DEBIAN_FRONTEND=noninteractive
 
