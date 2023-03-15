@@ -66,6 +66,26 @@ $ python /workflow/ball_bounce/./ball_bounce.py output.dsv 45 37 19 -3 3 1 0.5 1
 
 It generated an output.dsv almost immediately. We could likely adjust the simulation parameters for the calculation.
 
+## Quick Start with Flux
+
+We can basically run the workflow to run the simulation, generate a (partial) notebook (note there were bugs with the
+final visualization) and then copy it over to view it locally.
+
+```bash
+$ docker run --entrypoint bash --rm --name demo -it demos 
+$ flux start --test-size=4
+$ maestro run ball_bounce_suite_flux.yaml --pgen pgen.py -y
+```
+
+**Important** the current notebook has bugs (and is commented out) but if someone can fix them,
+we should be able to uncomment the step and copy it over to our local machine as follows:
+
+```bash
+$ docker cp demo:/workflow/ball_bounce/render.ipynb ./scripts/render.ipynb
+```
+
+If we were doing this with the operator, we would copy this result to a bound volume to save (and maybe some of the simulation data).
+
 ## Run with Flux
 
 I then wanted to run with Flux. Start an instance:
@@ -106,9 +126,8 @@ The content of each looks like:
 $(LAUNCHER) python /workflow/ball_bounce/./ball_bounce.py output.dsv 73 48 11 1 4 5 0.5 100 dcb980 9
 ```
 
-I'm not sure I did that correctly  - I saw [an example for LAUNCHER](https://github.com/LLNL/maestrowf/blob/51056ccfe279495a329036597510d1489dd0c1b1/samples/lulesh/lulesh_sample1_unix_flux.yaml#L19)
-and mimicked it, but I'm skeptical because I don't see any jobs in the `flux jobs -a`. To test, I ran the command manually with flux submit, and I saw the jobs! So I changed `${LAUNCHER}`
-in the flux YAML to just be flux submit, and that seemed to (instead) run everything with Flux.
+I saw [an example for LAUNCHER](https://github.com/LLNL/maestrowf/blob/51056ccfe279495a329036597510d1489dd0c1b1/samples/lulesh/lulesh_sample1_unix_flux.yaml#L19)
+and mimicked it to make a variable named launcher that is basically an alias for `flux submit`.
 
 ```bash
 flux jobs -a
@@ -130,24 +149,18 @@ flux jobs -a
    ƒ41BYo11Z root     python     CD      1      1   0.059s 10864fec333d
 ```
 Note that you'll get callback errors because flux is running as root. We can likely get around this running in the operator.
+When everything is done, you'll see an output.sqlite database in the root directory where you ran maestro, and a render.ipynb
+in the output path.
 
 A high level note - given that Maestro doesn't stay attached to the job, if we are running via the operator the "run as a command" single-user
 mode likely won't work - we would need to run via an interactive job, and determine (on our own) when the workflow is done.
-
-
-## Run with Flux + Notebooks
-
-TBA! I need to test this.
+We can likely use the presence of this file.
 
 ```bash
-$ docker run --entrypoint bash -p 8000:8000 -it demos 
+# ls
 ```
-
-Here is a more "quick start" (not tested yet)
-
-```bash
-$ flux start --test-size=4
-$ maestro run ball_bounce_suite_flux.yaml --pgen pgen.py -y
-# Living dangerously!
-$ jupyter notebook --allow-root --no-browser visualization.ipynb
+```console
+01_baseline_simulation   04_manage_data        README.md       ball_bounce_suite.yaml       output         requirements.txt  visualization.ipynb
+02_uncertainty_bounds    05_post-process_data  __pycache__     ball_bounce_suite_flux.yaml  output.sqlite  setup.sh
+03_simulation_ensembles  06_surrogate_model    ball_bounce.py  dsv_to_sina.py               pgen.py        teardown.sh
 ```
