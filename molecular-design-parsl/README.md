@@ -61,6 +61,7 @@ For now you can use the defaults:
 ```bash
 $ python3 ./scripts/0_molecular-design-with-parsl.py
 ```
+
 Then to copy over data from your host:
 
 ```bash
@@ -176,7 +177,6 @@ $ apt-get update && apt-get install -y redis
 ```
 
 Note there is a `redis.conf` in the working directory.
-
 And then start running it:
 
 ```bash

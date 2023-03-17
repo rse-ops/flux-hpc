@@ -120,15 +120,11 @@ queues = PipeQueues(
 # Set up Parsl to use Flux
 # https://parsl.readthedocs.io/en/stable/userguide/configuring.html
 
-config = Config(
-    executors=[
-        FluxExecutor(
-            # Maximum number of workers available workers
-            # flux_executor_kwargs={"nodes": args.flux_workers},
-            working_dir=args.working_dir,
-        )
-    ]
-)
+executor = FluxExecutor(working_dir=args.working_dir)
+
+# Workaround for bug that it isn't set if provided
+executor.launch_cmd="{flux} submit {python} {manager} {protocol} {hostname} {port}"
+config = Config(executors=[executor])
 
 # This will run in the background and will need a kill signal
 task_server = ParslTaskServer(
@@ -137,7 +133,6 @@ task_server = ParslTaskServer(
     config=config,
 )
 task_server.start()
-
 
 queues.send_inputs("C", method="compute_vertical")
 result = queues.get_result()

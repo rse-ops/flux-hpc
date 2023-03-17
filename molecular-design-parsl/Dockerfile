@@ -32,5 +32,6 @@ RUN git clone --depth 1 https://github.com/ExaWorks/molecular-design-parsl-demo 
 WORKDIR /workflow
 COPY ./environment.yml ./environment.yml
 RUN mamba env create --file environment.yml && mamba init
+RUN conda init --system
 COPY ./scripts ./scripts
 COPY ./data ./data

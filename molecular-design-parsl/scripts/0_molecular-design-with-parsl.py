@@ -89,15 +89,11 @@ batch_size: int = args.batch_size
 # Set up Parsl to use Flux
 # https://parsl.readthedocs.io/en/stable/userguide/configuring.html
 
-config = Config(
-    executors=[
-        FluxExecutor(
-            # Maximum number of workers available workers
-            # flux_executor_kwargs={"nodes": args.flux_workers},
-            working_dir=args.working_dir,
-        )
-    ]
-)
+executor = FluxExecutor(working_dir=args.working_dir)
+
+# Workaround for bug that it isn't set if provided
+executor.launch_cmd="{flux} submit {python} {manager} {protocol} {hostname} {port}"
+config = Config(executors=[executor])
 parsl.load(config)
 
 # ## Make an initial dataset
