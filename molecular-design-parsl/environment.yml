@@ -27,6 +27,7 @@ dependencies:
       - -e .
       - parsl
       - funcx_endpoint
+      - ase
       - foundry_ml
       - jupyterlab-spellchecker
       - colmena>=0.3.2

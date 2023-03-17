@@ -12,7 +12,7 @@ $ docker build -t mdparsl .
 And shell inside:
 
 ```bash
-$ docker run -it mdparsl --rm --name mdparsl
+$ docker run -it --rm --name mdparsl mdparsl
 ```
 
 You'll need to be inside a Flux instance:
@@ -65,8 +65,8 @@ Then to copy over data from your host:
 
 ```bash
 $ mkdir -p ./data && cd ./data
-$ docker cp ecstatic_wiles:/workflow/training-data-vs-time.svg .
-$ docker cp ecstatic_wiles:/workflow/parsl-results.csv .
+$ docker cp mdparsl:/workflow/training-data-vs-time.svg .
+$ docker cp mdparsl:/workflow/parsl-results.csv .
 ```
 
 Check out the results of this run under [data](data):
@@ -175,12 +175,7 @@ As follows:
 $ apt-get update && apt-get install -y redis
 ```
 
-Create a redis.conf:
-
-```
-appendonly no
-save ''
-```
+Note there is a `redis.conf` in the working directory.
 
 And then start running it:
 
