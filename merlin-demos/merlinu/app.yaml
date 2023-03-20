@@ -1,0 +1,15 @@
+broker:
+  name: rabbitmq
+  server: rabbitmq
+  password: /root/.merlin/rabbit.pass
+celery:
+  override:
+    visibility_timeout: 86400
+process:
+  kill: kill {pid}
+  status: pgrep -P {pid}
+results_backend:
+  db_num: 0
+  name: redis
+  port: 6379
+  server: redis
