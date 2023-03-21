@@ -6,7 +6,8 @@ and using a container with redis, and a container we build with Flux and the dem
 
 ## 1. Certificates
 
-Let's generate certificates locally to bind to the containers:
+Let's generate certificates locally to bind to the containers. First for
+rabbitmq:
 
 ```bash
 mkdir -p ./merlinu/cert_rabbitmq
@@ -14,6 +15,15 @@ git clone https://github.com/michaelklishin/tls-gen.git
 cd tls-gen/basic
 make CN=rabbitmq CLIENT_ALT_NAME=rabbitmq SERVER_ALT_NAME=rabbitmq
 cp result/* ../../merlinu/cert_rabbitmq
+```
+
+And now redis:
+
+```bash
+make CN=redis CLIENT_ALT_NAME=redis SERVER_ALT_NAME=redis
+make verify
+mkdir -p ../../merlinu/cert_redis
+cp result/* ../../merlinu/cert_redis
 ```
 
 You can then delete the tls-gen repository, as we won't need it again.

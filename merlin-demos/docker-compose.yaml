@@ -12,6 +12,20 @@ services:
     image: 'redis:latest'
     ports:
       - "6379:6379"
+    tty: true
+    command:
+      - --port 0
+      - --tls-port 6379
+      - --tls-ca-cert-file /cert_redis/ca_certificate.pem
+      - --tls-key-file /cert_redis/server_redis_key.pem
+      - --tls-cert-file /cert_redis/server_redis_certificate.pem
+      - --tls-auth-clients no
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./merlinu/cert_redis/:/cert_redis/
+    networks:
+      - mernet
     networks:
       - rabbitmq
 
@@ -21,25 +35,20 @@ services:
     # The hostname should not be necessary - didn't work either way
     hostname: rabbitmq
     container_name: rabbitmq
-    image: rabbitmq:3.8-management
+    image: rabbitmq:3-management
+    tty: true
     ports:
       - "15672:15672"
       - "15671:15671"
       - "5672:5672"
       - "5671:5671"
-    environment:
-      - RABBITMQ_SSL_CACERTFILE=/cert_rabbitmq/client_rabbitmq_certificate.pem
-      - RABBITMQ_SSL_KEYFILE=/cert_rabbitmq/server_rabbitmq_key.pem
-      - RABBITMQ_SSL_CERTFILE=/cert_rabbitmq/server_rabbitmq_certificate.pem
-      - RABBITMQ_SSL_VERIFY=verify_none
-      - RABBITMQ_SSL_FAIL_IF_NO_PEER_CERT=false
-      - RABBITMQ_DEFAULT_USER=merlinu
-      - RABBITMQ_DEFAULT_VHOST=/merlinu
-      - RABBITMQ_DEFAULT_PASS=guest
     volumes:
       - ./merlinu/cert_rabbitmq:/cert_rabbitmq
     networks:
       - rabbitmq
+    volumes:
+      - ./merlinu/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./merlinu/cert_rabbitmq:/cert_rambbitmq
 
   # Yer a weezard Harry!
   merlin:
