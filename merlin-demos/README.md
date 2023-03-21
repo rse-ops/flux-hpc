@@ -75,9 +75,40 @@ and the password in plain text in /root/.merlin/rabbit.pass. Then run the demo w
 $ merlin run feature_demo/feature_demo.yaml
 ```
 
-Note that this doesn't work for me because my merlin container cannot see redit or rabbitmq - likely
-some bug that I can't figure out with my setup. What we *could try* is getting the hostnames manually:
+Note that this doesn't work for me because of ssl:
+Here is what redis sees inside the container:
 
-```bash
-$ docker exec -it redis /bin/bash -c "cat /etc/hosts | grep $(hostname)"
 ```
+redis  | total 32
+redis  | -rw-rw-r-- 1 1000 1000 1281 Mar 21 18:25 ca_certificate.pem
+redis  | -rw------- 1 1000 1000 1704 Mar 21 18:25 ca_key.pem
+redis  | -rw------- 1 1000 1000 3437 Mar 21 18:25 client_redis.p12
+redis  | -rw-rw-r-- 1 1000 1000 1253 Mar 21 18:25 client_redis_certificate.pem
+redis  | -rw------- 1 1000 1000 1708 Mar 21 18:25 client_redis_key.pem
+redis  | -rw------- 1 1000 1000 3501 Mar 21 18:25 server_redis.p12
+redis  | -rw-rw-r-- 1 1000 1000 1338 Mar 21 18:25 server_redis_certificate.pem
+redis  | -rw------- 1 1000 1000 1704 Mar 21 18:25 server_redis_key.pem
+```
+When I use the entrypoint command:
+
+```
+    command:
+      - --port 0
+      - --tls-port 6379
+      - --tls-ca-cert-file /cert_redis/ca_certificate.pem
+      - --tls-key-file /cert_redis/server_redis_key.pem
+      - --tls-cert-file /cert_redis/server_redis_certificate.pem
+      - --tls-auth-clients no
+```
+
+I get permission denied
+
+```
+redis  | 1:M 21 Mar 2023 18:45:24.753 # Failed to configure TLS. Check logs for more info.
+redis  | 1:C 21 Mar 2023 18:45:26.884 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+redis  | 1:C 21 Mar 2023 18:45:26.884 # Redis version=7.0.9, bits=64, commit=00000000, modified=0, pid=1, just started
+redis  | 1:C 21 Mar 2023 18:45:26.884 # Configuration loaded
+redis  | 1:M 21 Mar 2023 18:45:26.885 # Failed to load private key: /cert_redis/server_redis_key.pem: error:0200100D:system library:fopen:Permission denied
+redis  | 1:M 21 Mar 2023 18:45:26.885 # Failed to configure TLS. Check logs for more info.
+```
+And that doesn't make sense because the user in the container is root. When I change ownership of that directory to uid 0 it doesn't change the error.
