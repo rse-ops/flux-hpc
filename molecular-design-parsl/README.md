@@ -198,7 +198,6 @@ Stopped here - this is hanging.
 $ python scripts/1_interleaving-simulation-and-steering.py
 ```
 
-
 ## 2. Contrast Performance
 
 TBA

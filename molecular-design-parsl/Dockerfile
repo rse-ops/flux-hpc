@@ -13,7 +13,7 @@ FROM ghcr.io/rse-ops/flux-conda:mamba
 # workdir: /workflow
 
 USER root
-RUN apt-get update
+RUN apt-get update --fix-missing
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     bwa \
     samtools \
