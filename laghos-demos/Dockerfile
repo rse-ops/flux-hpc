@@ -1,4 +1,5 @@
-FROM ghcr.io/rse-ops/flux-conda:mamba
+ARG tag=mamba
+FROM ghcr.io/rse-ops/flux-conda:${tag}
 
 # docker build -t demo .
 # docker exec -it demo bash
