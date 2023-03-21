@@ -2,7 +2,7 @@ ARG flux_restful_tag=latest
 FROM ghcr.io/flux-framework/flux-k8s-nio-data as base
 FROM ghcr.io/flux-framework/flux-restful-api:${flux_restful_tag}
 
-# This has the data needed by the dummy workflow!
+# This has the data needed by the dummy workflow
 COPY --from=base /NiO-fcc-supertwist111-supershift000-S8.h5 /NiO-fcc-supertwist111-supershift000-S8.h5
 ARG qmcpack_version=3.13.0
 ENV qmcpack_version=${qmcpack_version}
