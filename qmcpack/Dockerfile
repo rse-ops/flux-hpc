@@ -44,8 +44,7 @@ RUN wget https://github.com/QMCPACK/qmcpack/archive/refs/tags/v${qmcpack_version
     cd qmcpack-${qmcpack_version}/build  && \
     cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DENABLE_SOA=1 -DQMC_MIXED_PRECISION=1 .. && make;
 
-RUN mkdir -p /root/qmcpack && \
-    cp -R /root/qmcpack-${qmcpack_version}/build/bin/qmcpack /root/qmcpack/ && \
+RUN cp -R /root/qmcpack-${qmcpack_version}/build/bin/qmcpack /usr/local/bin && \
     mkdir -p /coral2/NiO
 
 # This is for reference in case we need to run the ctest that helps in generating the run config for strong scaling experiment
