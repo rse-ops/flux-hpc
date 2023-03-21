@@ -17,7 +17,6 @@ Then go to the Laghos install location, run the tests, and then try in flux!
 ```bash
 $ flux start --test-size=4
 $ cd /workflow/Laghos 
-$ make tests
 $ flux run make tests
 ```
 
