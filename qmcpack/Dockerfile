@@ -4,7 +4,7 @@ FROM ghcr.io/flux-framework/flux-restful-api:${flux_restful_tag}
 
 # This has the data needed by the dummy workflow
 COPY --from=base /NiO-fcc-supertwist111-supershift000-S8.h5 /NiO-fcc-supertwist111-supershift000-S8.h5
-ARG qmcpack_version=3.13.0
+ARG qmcpack_version=3.16.0
 ENV qmcpack_version=${qmcpack_version}
 
 # docker build -t qmc .
@@ -15,7 +15,6 @@ USER root
 WORKDIR /root
 ENV DEBIAN_FRONTEND=nonintercative
 RUN apt-get update && apt-get install -y build-essential \
-    cmake \
     tar \
     autoconf \
     automake \
@@ -34,6 +33,10 @@ RUN apt-get update && apt-get install -y build-essential \
     libhdf5-dev \
     libboost-all-dev \
     && apt-get clean
+
+RUN wget https://github.com/Kitware/CMake/releases/download/v3.26.0/cmake-3.26.0-linux-x86_64.sh && \
+    chmod +x cmake-3.26.0-linux-x86_64.sh && \
+    /bin/bash cmake-3.26.0-linux-x86_64.sh --prefix=/usr/local --skip-license
 
 # Install QMCpack
 RUN wget https://github.com/QMCPACK/qmcpack/archive/refs/tags/v${qmcpack_version}.tar.gz && \
