@@ -1,0 +1,48 @@
+name: build merlin (and other manual Dockerfile)
+
+on:
+  # Always test on pull request
+  pull_request: []
+
+  # Deploy on merge to main
+  push:
+    branches:
+    - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    name: Build Containers
+    strategy:
+      fail-fast: false
+      matrix:
+        container: [["merlin-demos/Dockerfile", 'ghcr.io/rse-ops/merlin-demos:merlin'],
+                    ["merlin-demos/Dockerfile.rabbitmq", 'ghcr.io/rse-ops/merlin-demos:rabbitmq'],
+                    ["merlin-demos/Dockerfile.redis", 'ghcr.io/rse-ops/merlin-demos:redis']]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+    - name: Make Space For Build
+      run: |
+        sudo rm -rf /usr/share/dotnet
+        sudo rm -rf /opt/ghc
+
+    - name: Build and Tag Container
+      env:
+        path: ${{ matrix.container[0]}}
+        container: ${{ matrix.container[1]}}
+      run: |
+        dirname=$(dirname ${path})
+        dockerfile=$(basename ${path})
+        cd $dirname
+        echo "Building ${container} in ${dirname}"
+        docker build -f ${dockerfile} -t ${container} .
+
+    - name: Login and Deploy Container
+      if: (github.event_name != 'pull_request')
+      run: |
+        set -x
+        docker images
+        echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        docker push --all-tags ghcr.io/rse-ops/merlin-demos
