@@ -2,14 +2,35 @@ broker:
   name: rabbitmq
   server: rabbitmq
   password: /root/.merlin/rabbit.pass
-celery:
-  override:
-    visibility_timeout: 86400
+  keyfile: /cert_rabbitmq/client_rabbitmq_key.pem
+  certfile: /cert_rabbitmq/client_rabbitmq_certificate.pem
+  ca_certs: /cert_rabbitmq/ca_certificate.pem
+  vhost: /merlinu
+  
+# celery:
+#  override:
+#    visibility_timeout: 86400
+
 process:
   kill: kill {pid}
   status: pgrep -P {pid}
+
 results_backend:
-  db_num: 0
-  name: redis
+
+  # IMPORTANT: "rediss" means "redis with ssl" it's not a typo
+  # written by a snake
+  name: rediss
+  url: rediss://redis:6379/0
   port: 6379
+  # merlin will generate this key if it does not exist yet,
+  # and will use it to encrypt all data over the wire to
+  # your redis server.
+  encryption_key: ~/.merlin/encrypt_data_key
+
+  # I don't think this is used when URL defined.
   server: redis
+  
+  # ssl security
+  keyfile: /cert_redis/client_redis_key.pem
+  certfile: /cert_redis/client_redis_certificate.pem
+  ca_certs: /cert_redis/ca_certificate.pem

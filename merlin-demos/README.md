@@ -68,47 +68,119 @@ Next, let's shell into the Merlin container.
 $ docker exec -it merlin bash
 ```
 
+You can check the status of your redis and rabbitmq (both should be OK before proceeding):
+
+```bash
+$ merlin info
+```
+
+<details>
+
+<summary>Output of merlin info</summary>
+
+```console
+[2023-03-22 03:39:27: INFO] Reading app config from file /root/.merlin/app.yaml
+  
+                                                
+       *      
+   *~~~~~                                       
+  *~~*~~~*      __  __           _ _       
+ /   ~~~~~     |  \/  |         | (_)      
+     ~~~~~     | \  / | ___ _ __| |_ _ __  
+    ~~~~~*     | |\/| |/ _ \ '__| | | '_ \ 
+   *~~~~~~~    | |  | |  __/ |  | | | | | |
+  ~~~~~~~~~~   |_|  |_|\___|_|  |_|_|_| |_|
+ *~~~~~~~~~~~                                    
+   ~~~*~~~*    Machine Learning for HPC Workflows                                 
+              
+
+
+Merlin Configuration
+-------------------------
+
+ config_file        | /root/.merlin/app.yaml
+ is_debug           | False
+ merlin_home        | /root/.merlin
+ merlin_home_exists | True
+ broker server      | amqps://root:******@rabbitmq:5671//merlinu
+ broker ssl         | {'keyfile': '/cert_rabbitmq/client_rabbitmq_key.pem', 'certfile': '/cert_rabbitmq/client_rabbitmq_certificate.pem', 'ca_certs': '/cert_rabbitmq/ca_certificate.pem', 'cert_reqs': <VerifyMode.CERT_REQUIRED: 2>}
+ results server     | rediss://redis:6379/0
+ results ssl        | {'ssl_keyfile': '/cert_redis/client_redis_key.pem', 'ssl_certfile': '/cert_redis/client_redis_certificate.pem', 'ssl_ca_certs': '/cert_redis/ca_certificate.pem', 'ssl_cert_reqs': <VerifyMode.CERT_REQUIRED: 2>}
+
+Checking server connections:
+----------------------------
+broker server connection: OK
+results server connection: OK
+
+Python Configuration
+-------------------------
+
+ $ which python3
+/opt/conda/bin/python3
+
+ $ python3 --version
+Python 3.10.9
+
+ $ which pip3
+/opt/conda/bin/pip3
+
+ $ pip3 --version
+pip 23.0 from /opt/conda/lib/python3.10/site-packages/pip (python 3.10)
+
+"echo $PYTHONPATH"
+```
+
+</details>
+
 Note the content of `/root/.merlin/app.yaml` that defines interactions with redis and rabbitmq,
-and the password in plain text in /root/.merlin/rabbit.pass. Then run the demo workflow (without Flux first):
+and the password in plain text in /root/.merlin/rabbit.pass. The ownership of the certificates
+(and also being bound to the merlin container) is really important - and that is handled
+in the respective entrypoint scripts in [scripts](scripts). First, generate
+the demo:
+
+```bash
+$ merlin example feature_demo
+```
+
+Then run the demo workflow (without Flux first):
 
 ```bash
 $ merlin run feature_demo/feature_demo.yaml
 ```
 
-Note that this doesn't work for me because of ssl:
-Here is what redis sees inside the container:
+From what I can tell, we see output and error in the studies directory:
 
-```
-redis  | total 32
-redis  | -rw-rw-r-- 1 1000 1000 1281 Mar 21 18:25 ca_certificate.pem
-redis  | -rw------- 1 1000 1000 1704 Mar 21 18:25 ca_key.pem
-redis  | -rw------- 1 1000 1000 3437 Mar 21 18:25 client_redis.p12
-redis  | -rw-rw-r-- 1 1000 1000 1253 Mar 21 18:25 client_redis_certificate.pem
-redis  | -rw------- 1 1000 1000 1708 Mar 21 18:25 client_redis_key.pem
-redis  | -rw------- 1 1000 1000 3501 Mar 21 18:25 server_redis.p12
-redis  | -rw-rw-r-- 1 1000 1000 1338 Mar 21 18:25 server_redis_certificate.pem
-redis  | -rw------- 1 1000 1000 1704 Mar 21 18:25 server_redis_key.pem
-```
-When I use the entrypoint command:
-
-```
-    command:
-      - --port 0
-      - --tls-port 6379
-      - --tls-ca-cert-file /cert_redis/ca_certificate.pem
-      - --tls-key-file /cert_redis/server_redis_key.pem
-      - --tls-cert-file /cert_redis/server_redis_certificate.pem
-      - --tls-auth-clients no
+```bash
+# cat studies/feature_demo_20230322-035214/merlin_info/cmd.out 
+[[0.78055381 0.02167573]
+ [0.34246986 0.81569574]
+ [0.12497185 0.54133217]
+ [0.23107361 0.2192876 ]
+ [0.14349186 0.96902287]
+ [0.78745147 0.3541445 ]
+ [0.48053942 0.23776201]
+ [0.75213343 0.75142001]
+ [0.82011063 0.78713369]
+ [0.35126391 0.2416619 ]]
 ```
 
-I get permission denied
+(and .err is empty).
 
+Now let's try with flux. We need to change the batch type in "feature_demo/feature_demo.yml" to "flux"
+
+```diff
+batch:
+-    type: local
++    type: flux
 ```
-redis  | 1:M 21 Mar 2023 18:45:24.753 # Failed to configure TLS. Check logs for more info.
-redis  | 1:C 21 Mar 2023 18:45:26.884 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
-redis  | 1:C 21 Mar 2023 18:45:26.884 # Redis version=7.0.9, bits=64, commit=00000000, modified=0, pid=1, just started
-redis  | 1:C 21 Mar 2023 18:45:26.884 # Configuration loaded
-redis  | 1:M 21 Mar 2023 18:45:26.885 # Failed to load private key: /cert_redis/server_redis_key.pem: error:0200100D:system library:fopen:Permission denied
-redis  | 1:M 21 Mar 2023 18:45:26.885 # Failed to configure TLS. Check logs for more info.
+
+And then start the flux instance:
+
+```bash
+$ # sudo -u fluxuser -E PATH=$PATH -E PYTHONPATH=$PYTHOPATH -E LD_LIBRARY_PATH=$LD_LIBRARY_PATH flux start --test-size=4
+$ whoami
+fluxuser
+$ merlin run feature_demo/feature_demo.yaml
 ```
-And that doesn't make sense because the user in the container is root. When I change ownership of that directory to uid 0 it doesn't change the error.
+
+TODO: update to run as fluxuser (and not root!)

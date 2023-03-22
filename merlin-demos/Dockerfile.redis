@@ -1,0 +1,3 @@
+FROM redis:latest
+COPY ./scripts/redis-entrypoint.sh /entrypoint.sh
+ENTRYPOINT /entrypoint.sh

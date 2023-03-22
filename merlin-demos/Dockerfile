@@ -26,8 +26,12 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
 WORKDIR /workflow
 RUN pip install merlin && \
     merlin config --broker redis && \
-    merlin example feature_demo && \
     rm /root/.merlin/app.yaml
+
+# Install spellbuild
+RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook && \
+    cd /tmp/spellbook && \
+    pip install .
 
 # Updated app yaml
 COPY ./merlinu/app.yaml /root/.merlin/app.yaml
