@@ -168,13 +168,13 @@ paper_flux                      Use flux to run single core MPI jobs and record 
 flux_test                       A simple ensemble of echo commands run by flux.
 ```
 
-Let's start with a simple one.
+Let's start with a simple one, and choose one that uses MPI.
 
 ```bash
-$ merlin demo flux_test
+$ merlin example flux_par
 ```
 
-Note that there is no queue in this container, so we need to delete it in "flux/flux_test.yaml"
+Note that there is no queue in this container, so we need to delete it in "flux/flux_par.yaml"
 
 ```diff
 batch:
@@ -187,14 +187,14 @@ batch:
 And then run:
 
 ```bash
-$ merlin run flux/flux_test.yaml
+$ merlin run flux/flux_par.yaml
 ```
 
 If I understand this correctly, that doesn't actually run anything, but it queues
 up the tasks (this interaction is a bit confusing). To run:
 
 ```bash
-$ merlin run-workers flux/flux_test.yaml
+$ merlin run-workers flux/flux_par.yaml
 ```
 
 You'll see a ton of output!
@@ -202,6 +202,8 @@ You'll see a ton of output!
 <details>
 
 <summary>Output of run-workers</summary>
+
+Note that this example output is from the `flux_test` workflow (I tested first).
 
 ```bash
 fluxuser@f47514a02ad9:/workflow$ flux-mini: WARNING: ⚠️ flux-mini is deprecated, use flux-batch, flux-run, etc.⚠️
@@ -526,39 +528,51 @@ Scheduled?: True
 <details>
 
 
-From what I can tell, we see output and error in the studies directory:
+Given that batch is changed to flux, you should see a job launched with `flux jobs -a`. Note the way this is
+currently designed is to create a flux allocation. You can check for output by presence of `MERLIN_FINISHED` files, e.g.,
 
 ```bash
-# cat studies/feature_demo_20230322-035214/merlin_info/cmd.out 
-[[0.78055381 0.02167573]
- [0.34246986 0.81569574]
- [0.12497185 0.54133217]
- [0.23107361 0.2192876 ]
- [0.14349186 0.96902287]
- [0.78745147 0.3541445 ]
- [0.48053942 0.23776201]
- [0.75213343 0.75142001]
- [0.82011063 0.78713369]
- [0.35126391 0.2416619 ]]
+$ tree studies/flux_par_20230322-165729/runs/
+```
+```console
+├── 00
+│   ├── MERLIN_FINISHED
+│   ├── flux_run.out
+│   ├── runs.slurm.err
+│   ├── runs.slurm.out
+│   └── runs.slurm.sh
+├── 01
+│   ├── MERLIN_FINISHED
+│   ├── flux_run.out
+│   ├── runs.slurm.err
+│   ├── runs.slurm.out
+│   └── runs.slurm.sh
+├── 02
+│   ├── MERLIN_FINISHED
+│   ├── flux_run.out
+│   ├── runs.slurm.err
+│   ├── runs.slurm.out
+│   └── runs.slurm.sh
+...
+├── 07
+│   ├── MERLIN_FINISHED
+│   ├── flux_run.out
+│   ├── runs.slurm.err
+│   ├── runs.slurm.out
+│   └── runs.slurm.sh
+├── 08
+│   ├── MERLIN_FINISHED
+│   ├── flux_run.out
+│   ├── runs.slurm.err
+│   ├── runs.slurm.out
+│   └── runs.slurm.sh
+└── 09
+    ├── MERLIN_FINISHED
+    ├── flux_run.out
+    ├── runs.slurm.err
+    ├── runs.slurm.out
+    └── runs.slurm.sh
 ```
 
-(and .err is empty).
-
-Now let's try with flux. We need to change the batch type in "feature_demo/feature_demo.yml" to "flux"
-
-```diff
-batch:
--    type: local
-+    type: flux
-```
-
-And then start the flux instance:
-
-```bash
-$ # sudo -u fluxuser -E PATH=$PATH -E PYTHONPATH=$PYTHOPATH -E LD_LIBRARY_PATH=$LD_LIBRARY_PATH flux start --test-size=4
-$ whoami
-fluxuser
-$ merlin run feature_demo/feature_demo.yaml
-```
-
-TODO: update to run as fluxuser (and not root!)
+And that seems to be it! We will try to look for more or better examples
+as we learn more.
