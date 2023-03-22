@@ -1,0 +1,4 @@
+FROM redis:latest
+COPY ./scripts/redis-entrypoint.sh /entrypoint.sh
+COPY ./merlinu/cert_redis /cert_redis
+ENTRYPOINT /entrypoint.sh
