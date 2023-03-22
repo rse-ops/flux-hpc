@@ -23,10 +23,17 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Wrappers to ensure we source the mamba environment!
+USER fluxuser
 WORKDIR /workflow
+ENV PATH=$PATH:/home/fluxuser/.local/bin
 RUN pip install merlin && \
     merlin config --broker redis && \
-    rm /root/.merlin/app.yaml
+    rm /home/fluxuser/.merlin/app.yaml
+
+# Merlin from pip doesn't have flux completely implemented
+RUN git clone --depth 1 https://github.com/LLNL/merlin /tmp/merlin && \
+    cd /tmp/merlin && \
+    pip install .
 
 # Install spellbuild
 RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook && \
@@ -34,8 +41,8 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook 
     pip install .
 
 # Updated app yaml
-COPY ./merlinu/app.yaml /root/.merlin/app.yaml
-COPY ./merlinu/rabbit.pass /root/.merlin/rabbit.pass
+COPY ./merlinu/app.yaml /home/fluxuser/.merlin/app.yaml
+COPY ./merlinu/rabbit.pass /home/fluxuser/.merlin/rabbit.pass
 
 # Entrypoint to keep container running!
 ENTRYPOINT ["tail", "-f", "/dev/null"]
