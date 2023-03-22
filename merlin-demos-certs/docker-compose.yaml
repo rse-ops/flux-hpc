@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+
+  # This can also be set up with TLS
+  # https://merlin.readthedocs.io/en/latest/modules/installation/installation.html#id7
+  # see 2.4.2 "Redis TLS Service"
+  redis:
+    restart: always
+    hostname: redis
+    container_name: redis
+
+    # We wrap the redis and rabbitmq entrypoint to give ownership of the
+    # certs to the rabbitmq and redis users (uid 999) respectively
+    build:
+      dockerfile: Dockerfile.redis
+    ports:
+      - "6379:6379"
+    tty: true   
+    ports:
+      - "6379:6379"
+    networks:
+      - mernet
+    networks:
+      - rabbitmq
+
+  rabbitmq:
+    restart: always
+
+    # The hostname should not be necessary - didn't work either way
+    hostname: rabbitmq
+    container_name: rabbitmq
+    build:
+      dockerfile: Dockerfile.rabbitmq
+    tty: true
+    ports:
+      - "15672:15672"
+      - "15671:15671"
+      - "5672:5672"
+      - "5671:5671"
+    networks:
+      - rabbitmq
+
+  # Yer a weezard Harry!
+  merlin:
+    build: .
+    container_name: merlin
+    networks:
+      - rabbitmq
+      
+    # I only added these because they weren't showing up (didn't change anything)
+    # You can try with them removed
+    links:
+      - rabbitmq 
+      - redis
+
+networks:
+  rabbitmq:
+    driver: bridge

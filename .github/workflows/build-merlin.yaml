@@ -18,7 +18,10 @@ jobs:
       matrix:
         container: [["merlin-demos/Dockerfile", 'ghcr.io/rse-ops/merlin-demos:merlin'],
                     ["merlin-demos/Dockerfile.rabbitmq", 'ghcr.io/rse-ops/merlin-demos:rabbitmq'],
-                    ["merlin-demos/Dockerfile.redis", 'ghcr.io/rse-ops/merlin-demos:redis']]
+                    ["merlin-demos/Dockerfile.redis", 'ghcr.io/rse-ops/merlin-demos:redis'],
+                    ["merlin-demos-certs/Dockerfile", 'ghcr.io/rse-ops/merlin-demos-certs:merlin'],
+                    ["merlin-demos-certs/Dockerfile.rabbitmq", 'ghcr.io/rse-ops/merlin-demos-certs:rabbitmq'],
+                    ["merlin-demos-certs/Dockerfile.redis", 'ghcr.io/rse-ops/merlin-demos-certs:redis']]
 
     steps:
     - name: Checkout

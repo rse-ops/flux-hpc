@@ -32,6 +32,8 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin /tmp/merlin && \
     cd /tmp/merlin && \
     pip install .
 
+# Generate the example in advance so we have it ready to go
+# in the Flux Operator
 RUN merlin config --broker redis && \
     rm /home/fluxuser/.merlin/app.yaml
 
@@ -43,6 +45,14 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook 
 # Updated app yaml
 COPY ./merlinu/app.yaml /home/fluxuser/.merlin/app.yaml
 COPY ./merlinu/rabbit.pass /home/fluxuser/.merlin/rabbit.pass
+COPY ./merlinu/cert_rabbitmq /cert_rabbitmq
+COPY ./merlinu/cert_redis /cert_redis
+# This will need to be copied to /workflow/flux/flux_par.yaml
+# after running     merlin example flux_par
+COPY ./merlinu/flux_par.yaml /workflow/flux_par.yaml
 
+RUN sudo chown -R fluxuser /cert_redis/ && \
+    sudo chown -R fluxuser /cert_rabbitmq/
+    
 # Entrypoint to keep container running!
 ENTRYPOINT ["tail", "-f", "/dev/null"]
