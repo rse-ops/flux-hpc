@@ -38,6 +38,10 @@ jobs:
       run: |
         dirname=$(dirname ${path})
         dockerfile=$(basename ${path})
+        # root needs to be active user for Flux Operator
+        if [[ "${path}" == "merlin-demos-certs/Dockerfile" ]]; then
+            echo "USER root" >> ${path}        
+        fi 
         cd $dirname
         echo "Building ${container} in ${dirname}"
         docker build -f ${dockerfile} -t ${container} .
