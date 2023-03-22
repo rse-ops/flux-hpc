@@ -1,0 +1,33 @@
+name: moldesign-demo
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+# Core dependencies
+  - python==3.9.*
+  - jupyterlab
+  - ipywidgets
+  - pip
+
+# Dependencies from the molecular design app
+  - scikit-learn==0.23.*
+  - matplotlib==3.3.3
+  - geometric==0.9.*
+  - qcengine==0.19.*
+  - rdkit==2021.09.01
+  - py-cpuinfo<6
+  - msgpack-python==1.*
+  - xtb-python
+  - redis
+  - psutil
+  - tqdm
+
+# Pip install Parsl and the local functions
+  - pip:
+      - -e .
+      - parsl
+      - funcx_endpoint
+      - ase
+      - foundry_ml
+      - jupyterlab-spellchecker
+      - colmena>=0.3.2
