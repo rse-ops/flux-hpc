@@ -44,8 +44,10 @@ jobs:
 
     - name: Login and Deploy Container
       if: (github.event_name != 'pull_request')
+      env:
+        container: ${{ matrix.container[1] }}
       run: |
         set -x
         docker images
         echo ${{ secrets.GITHUB_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-        docker push --all-tags ghcr.io/rse-ops/merlin-demos
+        docker push ${container}
