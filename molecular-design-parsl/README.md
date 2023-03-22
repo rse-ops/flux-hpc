@@ -2,8 +2,9 @@
 
 This example workflow will walk you through running the 
 the [EXAWorks Molecular Design Demo](https://github.com/ExaWorks/molecular-design-parsl-demo)
-using Parsl and Flux. We have adopted the scripts to be command line interfaces instead
-of notebooks. First, build the container:
+using Parsl and Flux. We have adopted the first script to be run from the command line instead
+of notebooks. Also, the columna integration does not seem to work, so we only
+provide the first workflow as an example. First, build the container:
 
 ```bash
 $ docker build -t mdparsl .
@@ -56,7 +57,7 @@ optional arguments:
                         Number of flux node available to run
 ```
 
-For now you can use the defaults:
+For now you can use the defaults. This script will use Flux internally (no need to run with flux submit, etc.)
 
 ```bash
 $ python3 ./scripts/0_molecular-design-with-parsl.py
@@ -71,7 +72,6 @@ $ docker cp mdparsl:/workflow/parsl-results.csv .
 ```
 
 Check out the results of this run under [data](data):
-
 
 <img src="./data/training-data-vs-time.svg">
 
@@ -159,45 +159,5 @@ fi
 
 </details>
 
-## 1. Interleaving simulation
-
-This step is really cool because it attempts to parallelize tasks, and it requires a redis database!
-For our testing here, we will install (and run redis) inside the same container. For our
-Flux Operator attempt, we will run it as a sidecar service. For this reason, we will
-add redis to the container manually:
-
-```bash
-$ docker run -it --rm --name mdparsl mdparsl
-```
-
-As follows:
-
-```bash
-$ apt-get update && apt-get install -y redis
-```
-
-Note there is a `redis.conf` in the working directory.
-And then start running it:
-
-```bash
-$ redis-server redis.conf
-```
-
-You can shell into the container from another terminal (since redis takes the terminal)
-Then check out the script to run:
-
-```bash
-$ docker exec -it mdparsl bash
-$ flux start --test-size=4
-$ conda activate /opt/conda/envs/moldesign-demo/
-```
-
-Stopped here - this is hanging.
-
-```bash
-$ python scripts/1_interleaving-simulation-and-steering.py
-```
-
-## 2. Contrast Performance
-
-TBA
+The other steps don't work - we have "best effort" scripts that (should?) work but we never got columna to work 
+(it hangs).
