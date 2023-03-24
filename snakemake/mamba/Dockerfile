@@ -17,6 +17,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
 
 RUN mamba install -c bioconda -c conda-forge snakemake snakemake-minimal && \
     mamba install -q -y -c conda-forge singularity && \
+    conda config --set channel_priority strict && \
     conda clean --all -y && \
     which python && \
     pip install .[reports,messaging,google-cloud]
