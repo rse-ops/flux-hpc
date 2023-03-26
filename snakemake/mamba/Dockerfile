@@ -10,7 +10,7 @@ ENV SHELL /bin/bash
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
-    wget curl bzip2 ca-certificates gnupg2 squashfs-tools git \
+    wget curl bzip2 ca-certificates gnupg2 squashfs-tools git tzdata \
     && apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
