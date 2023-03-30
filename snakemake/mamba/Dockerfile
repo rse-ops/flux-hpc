@@ -16,7 +16,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mamba install -c bioconda -c conda-forge snakemake snakemake-minimal && \
-    mamba install -q -y -c conda-forge singularity && \
+    mamba install -q -y -c conda-forge singularity udocker && \
     conda config --set channel_priority strict && \
     conda clean --all -y && \
     which python && \
