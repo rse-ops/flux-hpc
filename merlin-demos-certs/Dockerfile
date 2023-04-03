@@ -22,6 +22,9 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Install Singularity with conda
+RUN conda install -c conda-forge singularity
+
 # Wrappers to ensure we source the mamba environment!
 USER fluxuser
 WORKDIR /workflow
@@ -31,9 +34,6 @@ ENV PATH=$PATH:/home/fluxuser/.local/bin
 RUN git clone --depth 1 https://github.com/LLNL/merlin /tmp/merlin && \
     cd /tmp/merlin && \
     pip install .
-
-# Install Singularity with conda
-RUN conda install -c conda-forge singularity
 
 # Generate the example in advance so we have it ready to go
 # in the Flux Operator
