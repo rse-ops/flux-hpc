@@ -18,6 +18,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     liblzma-dev \
     libcurl4-openssl-dev \
     libncurses5-dev \
+    squashfs-tools \
     && apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
