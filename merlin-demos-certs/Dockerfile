@@ -32,6 +32,9 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin /tmp/merlin && \
     cd /tmp/merlin && \
     pip install .
 
+# Install Singularity with conda
+RUN conda install -c conda-forge singularity
+
 # Generate the example in advance so we have it ready to go
 # in the Flux Operator
 RUN merlin config --broker redis && \
