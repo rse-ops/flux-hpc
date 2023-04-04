@@ -36,8 +36,7 @@ RUN export VERSION=1.18.2 OS=linux ARCH=amd64 && \
   wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
   sudo tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
   rm go$VERSION.$OS-$ARCH.tar.gz && \
-  echo 'export PATH=/usr/local/go/bin:$PATH' >> ~/.bashrc && \
-  source ~/.bashrc && \
+  export PATH=/usr/local/go/bin:$PATH && \
   export VERSION=3.11.0 && \
     wget https://github.com/sylabs/singularity/releases/download/v${VERSION}/singularity-ce-${VERSION}.tar.gz && \
     tar -xzf singularity-ce-${VERSION}.tar.gz && \
@@ -45,6 +44,8 @@ RUN export VERSION=1.18.2 OS=linux ARCH=amd64 && \
     ./mconfig && \
     make -C builddir && \
     sudo make -C builddir install
+    
+ENV PATH=/usr/local/go/bin:$PATH
 
 # Wrappers to ensure we source the mamba environment!
 USER fluxuser
