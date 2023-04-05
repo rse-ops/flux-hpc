@@ -1,0 +1,38 @@
+description:
+    name: ball-bounce 
+    description: A workflow that simulates a ball bouncing in a box over several input sets.
+
+env:
+    variables:
+        OUTPUT_PATH: ./output
+        SIM_SCRIPT_PATH: ./ball_bounce.py
+        PROCESS_SCRIPT_PATH: ./dsv_to_sina.py
+        OUTPUT_DS_PATH: ./output.sqlite
+        LAUNCHER: flux submit
+
+batch:
+    type        : flux
+
+study:
+    - name: run-ball-bounce
+      description: Run a family of simulations of a ball in a box. 
+      run:
+          # Note that flux submit before (should be?) $(LAUNCHER) but I didn't see that worked - I think likely it needs a different submit command / setup
+          cmd: |
+            $(LAUNCHER) python $(SPECROOT)/$(SIM_SCRIPT_PATH) output.dsv $(X_POS_INITIAL) $(Y_POS_INITIAL) $(Z_POS_INITIAL) $(X_VEL_INITIAL) $(Y_VEL_INITIAL) $(Z_VEL_INITIAL) $(GRAVITY) $(BOX_SIDE_LENGTH) $(GROUP_ID) $(RUN_ID)
+    - name: ingest-ball-bounce
+      description: Ingest the outputs from the previous step
+      run:
+          cmd: |
+            $(LAUNCHER) python $(SPECROOT)/$(PROCESS_SCRIPT_PATH) ../run-ball-bounce $(SPECROOT)/$(OUTPUT_DS_PATH)
+          depends: [run-ball-bounce_*]
+
+# This notebook has bugs - but when fixed this will work
+#    - name: plot-ball-bounce
+#      description: Generate the notebook that shows something interesting!
+#      run:
+          # I hard coded the path because I was lazy - not ideal
+#          cmd: |
+#            $(LAUNCHER) jupyter nbconvert --to notebook --execute /workflow/ball_bounce/visualization.ipynb --output=/workflow/ball_bounce/render.ipynb --ExecutePreprocessor.timeout=-1
+#          depends: [ingest-ball-bounce]
+
