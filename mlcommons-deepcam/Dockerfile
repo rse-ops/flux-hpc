@@ -15,6 +15,7 @@ RUN pip install "git+https://github.com/mlperf/logging.git@501bbde47f005d67c6357
 RUN git clone https://github.com/mlcommons/hpc /tmp/hpc && \
     cd /tmp/hpc && \
     git checkout ${commit} && \
+    cd ./deepcam && \
     mv ./src/deepCam /opt/deepCam && \
     mv ./src/utils /opt/utils
 
