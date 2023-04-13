@@ -1,13 +1,14 @@
 name: build merlin (and other manual Dockerfile)
 
 on:
+  workflow_dispatch:
   # Always test on pull request
-  pull_request: []
+  # pull_request: []
 
   # Deploy on merge to main
-  push:
-    branches:
-    - main
+  # push:
+  #  branches:
+  #  - main
 
 jobs:
   build:
