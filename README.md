@@ -33,18 +33,15 @@ If/when needed we can lift some of these constraints, but for now they are
 reasonable. Note that we will soon be moving the instructions above to live alongside
 the operator, but will keep them here until we do.
 
-License
--------
+## License
 
-Copyright (c) 2017-2021, Lawrence Livermore National Security, LLC. 
-Produced at the Lawrence Livermore National Laboratory.
+HPCIC DevTools is distributed under the terms of the MIT license.
+All new contributions must be made under this license.
 
-RADIUSS Docker is licensed under the MIT license [LICENSE](./LICENSE).
+See [LICENSE](https://github.com/converged-computing/cloud-select/blob/main/LICENSE),
+[COPYRIGHT](https://github.com/converged-computing/cloud-select/blob/main/COPYRIGHT), and
+[NOTICE](https://github.com/converged-computing/cloud-select/blob/main/NOTICE) for details.
 
-Copyrights and patents in the RADIUSS Docker project are retained by
-contributors. No copyright assignment is required to contribute to RADIUSS
-Docker.
+SPDX-License-Identifier: (MIT)
 
-This work was produced under the auspices of the U.S. Department of
-Energy by Lawrence Livermore National Laboratory under Contract
-DE-AC52-07NA27344.
+LLNL-CODE- 842614
