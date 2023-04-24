@@ -8,3 +8,4 @@ RUN apt-get update && apt-get install -y tzdata && \
     pip install git+https://github.com/researchapps/dask-jobqueue.git@add/flux && \
     pip install dask-ml && \
     apt-get clean
+    
