@@ -1,7 +1,5 @@
 ARG tag=focal
 FROM fluxrm/flux-sched:${tag}
-ARG build_jobs=6
-ENV build_jobs=${build_jobs}
 
 # docker build --build-arg tag=focal -t ghcr.io/rse-ops/lammps-mpi:focal .
 
@@ -28,7 +26,7 @@ RUN git clone --depth 1 --branch stable_29Sep2021_update2 https://github.com/lam
     cd build && \
     . /etc/profile && \ 
     cmake ../cmake -D PKG_REAXFF=yes -D BUILD_MPI=yes -D PKG_OPT=yes -D FFT=FFTW3 && \
-    make -j ${build_jobs} && \
+    make && \
     make install
 
 # Create a home to put the examples in, and
