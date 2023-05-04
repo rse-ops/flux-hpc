@@ -32,7 +32,8 @@ RUN git clone --depth 1 https://github.com/LLNL/weave-demos /workflow
 WORKDIR /workflow/ball_bounce
 COPY ./scripts/setup.sh /setup.sh
 COPY ./ball_bounce_suite_flux.yaml ./ball_bounce_suite_flux.yaml
-RUN /bin/bash /setup.sh && python3 -m pip install -r requirements.txt && \
+RUN cd CZ/ball_bounce && \
+    /bin/bash /setup.sh && python3 -m pip install -r requirements.txt && \
     # The workflow expects to find python
     ln -s /usr/bin/python3 /usr/bin/python && \
     python3 -m pip install jut && \
