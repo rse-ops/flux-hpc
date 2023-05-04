@@ -35,7 +35,6 @@ RUN mkdir -p ./scripts && \
     python3 -m pip install graphviz && \
     python3 -m pip install pysam && \
     python3 -m pip install pygments
-
 COPY ./scripts/plot-quals.py ./scripts/plot-quals.py
 
 # Install deps to same snakemake environment

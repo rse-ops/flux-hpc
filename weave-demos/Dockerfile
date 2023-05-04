@@ -40,8 +40,7 @@ RUN /bin/bash /setup.sh && python3 -m pip install -r requirements.txt && \
     python3 -m pip install ipympl && \
     python3 -m pip install pydv
     
-# Temporary fix for
-# https://github.com/LLNL/PyDV/issues/275
+# Temporary fix for https://github.com/LLNL/PyDV/issues/275
 COPY ./scripts/pydvpy.py /usr/local/lib/python3.8/dist-packages/pydv/pydvpy.py 
 COPY ./scripts/visualization.ipynb ./visualization.ipynb
 EXPOSE 8888
