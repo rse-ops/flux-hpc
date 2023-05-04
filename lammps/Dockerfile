@@ -2,7 +2,6 @@ ARG tag=focal
 FROM fluxrm/flux-sched:${tag}
 
 # docker build --build-arg tag=focal -t ghcr.io/rse-ops/lammps-mpi:focal .
-
 # Potential entrypoint:
 #    mpirun -x PATH -np 2 --map-by socket lmp -v x 2 -v y 2 -v z 2 -in in.reaxc.hns -nocite
 # To run with flux
