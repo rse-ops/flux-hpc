@@ -6,7 +6,6 @@ FROM ghcr.io/flux-framework/flux-restful-api:${flux_restful_tag}
 # command: ./amg -n 1 1 1 -P 1 1 1
 # workdir: /opt/AMG/test
 
-
 USER root
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \

@@ -49,7 +49,6 @@ RUN cp -R /root/qmcpack-${qmcpack_version}/build/bin/qmcpack /usr/local/bin && \
 
 # This is for reference in case we need to run the ctest that helps in generating the run config for strong scaling experiment
 #    && cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DENABLE_SOA=1 -DQMC_MIXED_PRECISION=1 -DQMC_DATA=/coral2 .. && make;
-
 ENV PATH=/root/qmcpack:$PATH
 COPY ./NiO/nio_data.tgz /coral2/NiO/nio_data.tgz
 RUN cd /coral2/NiO/ && tar -xzvf nio_data.tgz && \
