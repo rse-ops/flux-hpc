@@ -1,7 +1,5 @@
 ARG tag=latest
 FROM ghcr.io/flux-framework/flux-restful-api:${tag}
-
-# Install flux accounting
 RUN git clone --depth 1 https://github.com/flux-framework/flux-accounting && \
     cd flux-accounting && \
    ./autogen.sh && \
