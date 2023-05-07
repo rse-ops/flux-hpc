@@ -28,20 +28,22 @@ RUN git clone --depth 1 https://github.com/k3s-io/k3s && \
     cd k3s && \
     git checkout b32bf495417b7d9f66604b83dca4e2f01f33bc8c && \
     export PATH=/usr/local/go/bin:$PATH && \
-    pushd ./scripts && \
+    cd ./scripts && \
     ./download && \
     ./validate && \
     ./build && \
     # Remove line that tries to upload to s3
     sed -i '$ d' ./package-cli && \
-    ./package-cli && \
-    popd
+    ./package-cli
 
 # Move into bins and uninstall go and finalize stuffs
+WORKDIR /src/k3s
 RUN mkdir -p /lib/modules /lib/firmware && \
     mv bin/* /usr/local/bin && \
-    mv dist/artifacts/k3s /usr/local/bin && \
-    rm -rf /usr/local/go && \
+    mv dist/artifacts/k3s /usr/local/bin
+   
+WORKDIR /   
+RUN rm -rf /src /usr/local/go && \
     echo 'hosts: files dns' > /etc/nsswitch.conf && \
     echo "PRETTY_NAME=\"K3s develop\"" > /etc/os-release && \
     chmod 1777 /tmp
