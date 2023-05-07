@@ -117,7 +117,7 @@ RUN apt-get -qq install -y --no-install-recommends \
         libjansson-dev \
         libmunge-dev \
         libncursesw5-dev \
-        liblua5.2-dev \
+        liblua5.1-dev \
         liblz4-dev \
         libsqlite3-dev \
         uuid-dev \
