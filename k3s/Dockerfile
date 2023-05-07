@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y ca-certificates \
     tar zstd wget tzdata libseccomp-dev curl git \
     gcc pkg-config build-essential \
     # This is needed for building k3s
-    libbtrfs-dev btrfs-progs-devel \
+    libbtrfs-dev btrfs-progs \
     software-properties-common && \
     add-apt-repository --yes ppa:rmescandon/yq && \
     apt-get update && \
