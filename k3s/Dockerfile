@@ -37,10 +37,13 @@ RUN git clone --depth 1 https://github.com/k3s-io/k3s && \
     ./package-cli
 
 # Move into bins and uninstall go and finalize stuffs
+# We have a custom scripts that only copies over executables
+# we don't have. I'm worried this was prepared for busybox
+# and runtime will have issues.
+COPY ./move.sh /src/k3s/move.sh
 WORKDIR /src/k3s
 RUN mkdir -p /lib/modules /lib/firmware && \
-    mv bin/* /usr/local/bin && \
-    mv dist/artifacts/k3s /usr/local/bin
+    /bin/bash ./move.sh
    
 WORKDIR /   
 RUN rm -rf /src /usr/local/go && \
@@ -203,7 +206,7 @@ RUN git clone --depth 1 -b disable-sign-id-check https://github.com/researchapps
     PYTHON=/opt/conda/bin/python PYTHON_PREFIX=PYTHON_EXEC_PREFIX=/opt/conda/lib/python3.8/site-packages ./configure --prefix=/usr --sysconfdir=/etc \
         --with-systemdsystemunitdir=/etc/systemd/system \
         --localstatedir=/var \
-        --with-flux-security
+        --with-flux-security && \
     make clean && \
     make && \
     make install
