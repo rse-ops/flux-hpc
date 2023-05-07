@@ -139,19 +139,20 @@ RUN apt-get -qq install -y --no-install-recommends \
         enchant \
         aspell \
         aspell-en && \
-    locale-gen en_US.UTF-8
+    locale-gen en_US.UTF-8 && \
+    luarocks install luaposix
     
 # Install caliper by hand for now
-#RUN mkdir -p /opt/caliper && \
-#    cd /opt/caliper && \
-#    wget -O - https://github.com/LLNL/Caliper/archive/v1.7.0.tar.gz | tar xvz --strip-components 1 && \
-#    mkdir build && \
-#    cd build && \
-#    CC=gcc CXX=g++ cmake .. -DCMAKE_INSTALL_PREFIX=/usr && \
-#    make -j 4 && \
-#    make install && \
-#    cd ../.. && \
-#    rm -rf caliper
+RUN mkdir -p /opt/caliper && \
+    cd /opt/caliper && \
+    wget -O - https://github.com/LLNL/Caliper/archive/v1.7.0.tar.gz | tar xvz --strip-components 1 && \
+    mkdir build && \
+    cd build && \
+    CC=gcc CXX=g++ cmake .. -DCMAKE_INSTALL_PREFIX=/usr && \
+    make -j 4 && \
+    make install && \
+    cd ../.. && \
+    rm -rf caliper
 
 # Install openpmix, prrte
 RUN mkdir -p /opt/prrte && cd /opt/prrte && \
@@ -206,7 +207,8 @@ RUN git clone --depth 1 -b disable-sign-id-check https://github.com/researchapps
     PYTHON=/opt/conda/bin/python PYTHON_PREFIX=PYTHON_EXEC_PREFIX=/opt/conda/lib/python3.8/site-packages ./configure --prefix=/usr --sysconfdir=/etc \
         --with-systemdsystemunitdir=/etc/systemd/system \
         --localstatedir=/var \
-        --with-flux-security && \
+        --with-flux-security \
+        --with-caliper && \
     make clean && \
     make && \
     make install
