@@ -3,9 +3,21 @@ FROM ghcr.io/rse-ops/flux-conda:${tag}
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Example runs, as user flux
+# sudo -u flux -E HOME=/home/flux /bin/bash
+# export LD_LIBRARY_PATH=/opt/conda/lib
+# export PYTHONPATH=/opt/conda/lib/python3.10/site-packages
+# flux start --test-size=4
 # flux run -n 4 ./hello_c
+# flux run -n 4 ./hello_cxx
 # flux run -n 4 ./connectivity_c
+# flux run -n 4 ./hello_usempi
 # flux run -n 4 ./ring_c
+# flux run -n 4 ./ring_usempi
+# flux run -n 4 ./ring_mpifh
+
+# not sure how to reproduce:
+# mpirun -np 2 --mca mpi_spc_attach all --mca mpi_spc_dump_enabled true ./spc_example [num_messages] [message_size]
+
 
 # not sure how to reproduce:
 # mpirun -np 2 --mca mpi_spc_attach all --mca mpi_spc_dump_enabled true ./spc_example [num_messages] [message_size]
@@ -16,7 +28,13 @@ RUN apt-get update && \
     apt-get install -y gfortran && \
     wget https://docs.it4i.cz/src/ompi/ompi.tar.gz && \
     tar -xzvf ompi.tar.gz && \
-    make
+    rm ompi/Makefile
+
+WORKDIR /opt/ompi
+
+# We can't build java ones
+COPY ./Makefile ./Makefile
+RUN make
 
 # Create a home to put the examples in, and
 # ensure lmp executable is on path for flux user
