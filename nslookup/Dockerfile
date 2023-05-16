@@ -11,7 +11,4 @@ RUN apt-get update && \
 # Create a home to put the examples in, and
 # ensure lmp executable is on path for flux user
 # And anyone can interact with lammps examples
-RUN useradd -ms /bin/bash -u 1234 flux && \
-    mv /opt/lammps/examples /home/flux/examples && \
-    chown -R 1234 /home/flux/examples && \
-    cp /root/.local/bin/lmp /usr/local/bin/lmp
+RUN useradd -ms /bin/bash -u 1234 flux
