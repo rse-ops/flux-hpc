@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 USER root
 WORKDIR /opt/
 RUN apt-get update && \
-    apt-get install -y dnsutils
+    apt-get install -y dnsutils telnet
 
 # Create a home to put the examples in, and
 # ensure lmp executable is on path for flux user
