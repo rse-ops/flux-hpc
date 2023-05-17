@@ -24,9 +24,6 @@ RUN git clone --depth 1 --branch stable_29Sep2021_update2 https://github.com/lam
 # And anyone can interact with lammps examples
 RUN useradd -ms /bin/bash -u 1234 flux && \
     mv /opt/lammps/examples /home/flux/examples && \
-    chown -R 1234 /home/flux/examples && \
-    cp /root/.local/bin/lmp /usr/local/bin/lmp
+    chown -R 1234 /home/flux/examples
     
-# Target this example
-ENV PATH=/root/.local/bin:$PATH
 WORKDIR /home/flux/examples/reaxff/HNS
