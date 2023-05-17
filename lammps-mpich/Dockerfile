@@ -5,7 +5,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 USER root
 WORKDIR /opt/
 RUN apt-get update && \
-    apt-get install -y fftw3-dev fftw3 pdsh libfabric-dev libfabric1
+    apt-get install -y fftw3-dev fftw3 pdsh libfabric-dev libfabric1 dnsutils telnet strace
 
 # install laamps
 RUN git clone --depth 1 --branch stable_29Sep2021_update2 https://github.com/lammps/lammps.git /opt/lammps && \
