@@ -2,8 +2,6 @@ ARG tag=mamba
 FROM ghcr.io/rse-ops/flux-conda:${tag}
 ENV DEBIAN_FRONTEND=noninteractive
 
-
-
 USER root
 WORKDIR /opt/
 RUN apt-get update && \
@@ -23,6 +21,7 @@ RUN git clone --depth 1 --branch stable_29Sep2021_update2 https://github.com/lam
 # ensure lmp executable is on path for flux user
 # And anyone can interact with lammps examples
 RUN useradd -ms /bin/bash -u 1234 flux && \
+    mkdir -p /home/flux && \
     mv /opt/lammps/examples /home/flux/examples && \
     chown -R 1234 /home/flux/examples
     
