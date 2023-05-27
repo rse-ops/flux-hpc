@@ -212,3 +212,6 @@ RUN git clone --depth 1 https://github.com/flux-framework/flux-sched && \
 
 RUN cp /opt/flux-sched/t/scripts/flux-tree* /usr/libexec/flux/cmd/
 WORKDIR /opt/flux-core
+
+# Don't forget to add the flux user!
+RUN useradd -ms /bin/bash -u 1234 flux  
