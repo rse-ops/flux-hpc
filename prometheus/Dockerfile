@@ -210,6 +210,7 @@ RUN git clone https://github.com/digitalocean/prometheus-client-c /tmp/prometheu
 # https://github.com/flux-framework/flux-core/blob/master/src/test/docker/docker-run-checks.sh#L185-L191
 RUN git clone -b add/prometheus-plugin https://github.com/researchapps/flux-core && \
     cd flux-core && \
+    echo "modload 0 prometheus" >> /etc/rc1 && \
     ./autogen.sh && \
     ./configure --prefix=/usr --sysconfdir=/etc \
         --enable-prometheus \
