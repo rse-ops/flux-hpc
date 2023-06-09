@@ -1,9 +1,9 @@
-ARG tag=mamba
-FROM ghcr.io/rse-ops/flux-conda:${tag}
+ARG tag=focal
+FROM fluxrm/flux-sched:${tag}
 
 ENV DEBIAN_FRONTEND=nonintercative
+USER root
 RUN apt-get update && apt-get install -y tzdata && \
-    mamba install singularity && \
-    mamba install -y numpy matplotlib scipy && \
-    pip install balsam && \
+    python3 -m pip install numpy matplotlib scipy && \
+    python3 -m pip install balsam && \
     apt-get clean

@@ -4,4 +4,4 @@ dockerbuild:
     tag:
       key: tag
       versions:
-       - mamba
+       - focal
