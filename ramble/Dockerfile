@@ -10,18 +10,29 @@ ENV DEBIAN_FRONTEND=noninteractive
 # ramble workspace setup
 # ramble on
 
+# Ensure the flux user owns the spack install
 USER root
-WORKDIR /opt/
-RUN apt-get update && \
+RUN useradd -ms /bin/bash -u 1234 flux && \
+    chown -R 1234 /home/flux && \
+    apt-get update && \
     apt-get install -y fftw3-dev fftw3 pdsh libfabric-dev libfabric-bin libfabric1 time
 
-# install ramble and add example
-RUN git clone -c feature.manyFiles=true https://github.com/GoogleCloudPlatform/ramble.git && \
+USER flux
+WORKDIR /home/flux
+RUN git clone --depth 1 https://github.com/spack/spack && \
+    git clone -c feature.manyFiles=true https://github.com/GoogleCloudPlatform/ramble.git && \
     cd ramble && \
     pip install -r requirements.txt
-ENV PATH=/opt/ramble/bin:$PATH
-RUN ramble workspace create -d /home/flux/test_workspace -c /opt/ramble/examples/basic_hostname_config.yaml
-RUN useradd -ms /bin/bash -u 1234 flux && \
-    chown -R 1234 /home/flux/test_workspace && \
-    echo ". /opt/ramble/share/ramble/setup-env.sh" >> /home/flux/.bashrc && \
-    echo ". /opt/ramble/share/ramble/setup-env.sh" >> /home/flux/.profile
+COPY ./flux_gromacs.yaml /home/flux/ramble/examples/flux_gromacs.yaml
+ENV PATH=/home/flux/ramble/bin:/home/flux/spack/bin:$PATH
+RUN ramble workspace create -d /home/flux/test_workspace -c /home/flux/ramble/examples/basic_hostname_config.yaml && \
+    ramble workspace create -d /home/flux/gromacs_workspace -c /home/flux/ramble/examples/flux_gromacs.yaml
+    
+WORKDIR /home/flux/gromacs_workspace
+RUN . /home/flux/ramble/share/ramble/setup-env.sh && \
+    ramble workspace activate /home/flux/gromacs_workspace/ && \
+    ramble workspace concretize && \
+    ramble workspace setup
+
+# Allow setup for Flux operator
+USER root
