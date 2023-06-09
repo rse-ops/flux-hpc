@@ -4,10 +4,11 @@ FROM fluxrm/flux-sched:${tag}
 ENV DEBIAN_FRONTEND=noninteractive
 
 # su flux
-# . /opt/ramble/share/ramble/setup-env.sh
-# ramble workspace activate /home/flux/test_workspace/
-# ramble workspace concretize
-# ramble workspace setup
+# flux start --test-size=4
+# . /home/flux/ramble/share/ramble/setup-env.sh
+# ramble workspace activate /home/flux/gromacs_workspace/
+# ramble workspace concretize # (might already be done)
+# ramble workspace setup # (requires spack in path, already done in build)
 # ramble on
 
 # Ensure the flux user owns the spack install

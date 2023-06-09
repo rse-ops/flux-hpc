@@ -1,7 +1,7 @@
 ramble:
   variables:
-    processes_per_node: 16
-    mpi_command: 'mpirun -n {n_ranks} -ppn {processes_per_node} -hostfile hostfile'
+    processes_per_node: 1
+    mpi_command: 'flux submit -n {n_ranks} -c {processes_per_node}'
     batch_submit: '{execute_experiment}'
   applications:
     gromacs: # Application name
