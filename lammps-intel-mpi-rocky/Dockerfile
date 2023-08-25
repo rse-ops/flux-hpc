@@ -9,7 +9,7 @@ RUN yum update -y && \
 # install laamps alongside spack
 RUN cd /opt/spack-environment && \
     . spack/share/spack/setup-env.sh && \
-    . /opt/intel/mpi/latest/env/vars.sh    
+    . /opt/intel/mpi/latest/env/vars.sh  && \
     git clone --depth 1 --branch stable_29Sep2021_update2 https://github.com/lammps/lammps.git /opt/lammps && \
     cd /opt/lammps && \
     mkdir build && \
