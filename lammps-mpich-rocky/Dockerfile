@@ -1,5 +1,5 @@
-ARG tag="tag-8"
-FROM ghcr.io/rse-ops/spack-mpich:${tag}
+ARG tag="8"
+FROM ghcr.io/rse-ops/spack-mpich:tag-${tag}
 
 USER root
 WORKDIR /opt/
