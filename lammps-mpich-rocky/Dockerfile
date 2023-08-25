@@ -18,7 +18,7 @@ RUN cd /opt/spack-environment && \
     make && \
     make install
 
-# ensure lmp executable is on path for flux user
+# Ensure lmp executable is on path for flux user
 # And anyone can interact with lammps examples
 RUN mkdir -p /home/flux && \
     mv /opt/lammps/examples /home/flux/examples && \
