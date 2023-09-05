@@ -1,7 +1,0 @@
-dockerbuild:
-
-  build_args:
-    tag:
-      key: tag
-      versions:
-       - "8"
