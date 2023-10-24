@@ -14,13 +14,9 @@ services:
     # certs to the rabbitmq and redis users (uid 999) respectively
     build:
       dockerfile: Dockerfile.redis
-    ports:
-      - "6379:6379"
     tty: true   
     ports:
       - "6379:6379"
-    networks:
-      - mernet
     networks:
       - rabbitmq
 

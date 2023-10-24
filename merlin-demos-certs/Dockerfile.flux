@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ghcr.io/rse-ops/flux-conda:mamba
 
 # docker compose build
 # docker compose up -d
@@ -9,6 +9,7 @@ FROM ubuntu:latest
 
 # workdir: /workflow
 
+USER root
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     curl \
@@ -24,10 +25,8 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     libseccomp-dev \
     libglib2.0-dev \
     pkg-config \
-    python3-pip \
     cryptsetup \
     runc \
-    git \
     && apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -35,7 +34,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
 # Install Singularity
 RUN export VERSION=1.18.2 OS=linux ARCH=amd64 && \
   wget https://dl.google.com/go/go$VERSION.$OS-$ARCH.tar.gz && \
-  tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
+  sudo tar -C /usr/local -xzvf go$VERSION.$OS-$ARCH.tar.gz && \
   rm go$VERSION.$OS-$ARCH.tar.gz && \
   export PATH=/usr/local/go/bin:$PATH && \
   export VERSION=3.11.0 && \
@@ -44,12 +43,14 @@ RUN export VERSION=1.18.2 OS=linux ARCH=amd64 && \
     cd singularity-ce-${VERSION} && \
     ./mconfig && \
     make -C builddir && \
-    make -C builddir install
+    sudo make -C builddir install
     
 ENV PATH=/usr/local/go/bin:$PATH
 
 # Wrappers to ensure we source the mamba environment!
+USER fluxuser
 WORKDIR /workflow
+ENV PATH=$PATH:/home/fluxuser/.local/bin
 
 # Merlin from pip doesn't have flux completely implemented
 RUN git clone --depth 1 https://github.com/LLNL/merlin /tmp/merlin && \
@@ -59,7 +60,7 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin /tmp/merlin && \
 # Generate the example in advance so we have it ready to go
 # in the Flux Operator
 RUN merlin config --broker redis && \
-    rm /root/.merlin/app.yaml
+    rm /home/fluxuser/.merlin/app.yaml
 
 # Install spellbuild
 RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook && \
@@ -67,13 +68,16 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook 
     pip install .
 
 # Updated app yaml
-COPY ./merlinu/app.yaml /root/.merlin/app.yaml
-COPY ./merlinu/rabbit.pass /root/.merlin/rabbit.pass
+COPY ./merlinu/app.yaml /home/fluxuser/.merlin/app.yaml
+COPY ./merlinu/rabbit.pass /home/fluxuser/.merlin/rabbit.pass
 COPY ./merlinu/cert_rabbitmq /cert_rabbitmq
 COPY ./merlinu/cert_redis /cert_redis
 # This will need to be copied to /workflow/flux/flux_par.yaml
 # after running     merlin example flux_par
 COPY ./merlinu/flux_par.yaml /workflow/flux_par.yaml
+
+RUN sudo chown -R fluxuser /cert_redis/ && \
+    sudo chown -R fluxuser /cert_rabbitmq/
     
 # Entrypoint to keep container running!
 ENTRYPOINT ["tail", "-f", "/dev/null"]
