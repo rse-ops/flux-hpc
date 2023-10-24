@@ -68,7 +68,7 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook 
     pip install .
 
 # Updated app yaml
-COPY ./merlinu/app.yaml /home/fluxuser/.merlin/app.yaml
+COPY ./merlinu/app-fluxuser.yaml /home/fluxuser/.merlin/app.yaml
 COPY ./merlinu/rabbit.pass /home/fluxuser/.merlin/rabbit.pass
 COPY ./merlinu/cert_rabbitmq /cert_rabbitmq
 COPY ./merlinu/cert_redis /cert_redis

@@ -1,0 +1,5 @@
+FROM rabbitmq:3-management
+COPY ./scripts/rabbitmq-entrypoint.sh /entrypoint.sh
+COPY ./merlinu/rabbitmq-fluxuser.conf /etc/rabbitmq/rabbitmq.conf
+COPY ./merlinu/cert_rabbitmq /cert_rabbitmq
+ENTRYPOINT /entrypoint.sh

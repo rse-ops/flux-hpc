@@ -10,8 +10,12 @@ and using a container with redis, and a container we build with Flux and the dem
 
 See [merlin-demos](../merlin-demos) for how the certificates were generated.
 
-
 ## 2. Docker Build
+
+**IMPORTANT** these containers (and the configs for rabbitmq and app.yaml) have been modified to work with the root user. 
+If you want to fall back a container with fluxuser you'll need to change them back. The change was made on October 23, 2023
+if you want to go back in git history. I figure nobody cares so I'm moving forward with the updated Flux Operator design
+(that just uses root).
 
 We will need to build two containers - one for merlin, and one for rabbitmq.
 I pushed them to a temporary location:
