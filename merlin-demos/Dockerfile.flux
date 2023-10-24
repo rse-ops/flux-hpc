@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ghcr.io/rse-ops/flux-conda:mamba
 
 # docker compose build
 # docker compose up -d
@@ -9,6 +9,7 @@ FROM ubuntu:latest
 
 # workdir: /workflow
 
+USER root
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     curl \
@@ -17,14 +18,14 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     liblzma-dev \
     libcurl4-openssl-dev \
     libncurses5-dev \
-    python3-pip \
-    git \
     && apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 # Wrappers to ensure we source the mamba environment!
+USER fluxuser
 WORKDIR /workflow
+ENV PATH=$PATH:/home/fluxuser/.local/bin
 
 # Merlin from pip doesn't have flux completely implemented
 RUN git clone --depth 1 https://github.com/LLNL/merlin /tmp/merlin && \
@@ -32,7 +33,7 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin /tmp/merlin && \
     pip install .
 
 RUN merlin config --broker redis && \
-    rm /root/.merlin/app.yaml
+    rm /home/fluxuser/.merlin/app.yaml
 
 # Install spellbuild
 RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook && \
@@ -40,8 +41,8 @@ RUN git clone --depth 1 https://github.com/LLNL/merlin-spellbook /tmp/spellbook 
     pip install .
 
 # Updated app yaml
-COPY ./merlinu/app.yaml /root/.merlin/app.yaml
-COPY ./merlinu/rabbit.pass /root/.merlin/rabbit.pass
+COPY ./merlinu/app.yaml /home/fluxuser/.merlin/app.yaml
+COPY ./merlinu/rabbit.pass /home/fluxuser/.merlin/rabbit.pass
 
 # Entrypoint to keep container running!
 ENTRYPOINT ["tail", "-f", "/dev/null"]
