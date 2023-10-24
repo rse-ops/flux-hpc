@@ -17,12 +17,8 @@ services:
     ports:
       - "6379:6379"
     tty: true   
-    ports:
-      - "6379:6379"
     volumes:
       - ./merlinu/cert_redis/:/cert_redis/
-    networks:
-      - mernet
     networks:
       - rabbitmq
 
