@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        container: [["merlin-demos/Dockerfile", 'ghcr.io/rse-ops/merlin-demos:merlin']
+        container: [["merlin-demos/Dockerfile", 'ghcr.io/rse-ops/merlin-demos:merlin'],
                     ["merlin-demos/Dockerfile.flux", 'ghcr.io/rse-ops/merlin-demos-flux:merlin'],
                     ["merlin-demos/Dockerfile.rabbitmq", 'ghcr.io/rse-ops/merlin-demos:rabbitmq'],
                     ["merlin-demos/Dockerfile.redis", 'ghcr.io/rse-ops/merlin-demos:redis'],
