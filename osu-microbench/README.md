@@ -12,10 +12,9 @@ If you want to test the benchmarks without the UI:
 docker run -it --entrypoint bash osu-benchmarks
 ```
 ```bash
-. /etc/profile.d/z10_spack_environment.sh
 flux start --test-size=4
 cd /opt/osu-benchmark/build.openmpi/libexec/osu-micro-benchmarks/mpi/one-sided
-flux mini run -ompi=openmpi@5 -n 2 ./osu_get_latency
+flux run -ompi=openmpi@5 -n 2 ./osu_get_latency
 ```
 
 If you want to test with the UI:
