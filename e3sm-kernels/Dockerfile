@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-#  docker build -f Dockerfile -t ghcr.io/rse-ops/nas-parallel-benchmarks .
+#  docker build -f Dockerfile -t ghcr.io/rse-ops/e3sm-kernels:flux .
 #  docker push ghcr.io/rse-ops/amg2023:intel-mpi
 
 RUN apt-get update
@@ -33,7 +33,7 @@ RUN mkdir /opt/spack-environment \
     &&   echo "  - flux-core" \
     &&   echo "  - pmix@4.2.2" \
     &&   echo "  - flux-pmix" \
-    &&   echo "  - npb classes='S,W,A,B,C,D,E,F' names='is,ep,cg,mg,ft,bt,sp,lu'" \
+    &&   echo "  - e3sm-kernels" \
     &&   echo "  concretizer:" \
     &&	 echo "    unify: true" \
     &&   echo "  config:" \
