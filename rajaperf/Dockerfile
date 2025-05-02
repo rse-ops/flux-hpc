@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-# docker build -f Dockerfile -t ghcr.io/rse-ops/havoqgt:flux .
+# docker build -f Dockerfile -t ghcr.io/rse-ops/rajaperf:flux .
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -208,19 +208,11 @@ RUN apt-get update && \
 
 WORKDIR /opt
 
-RUN git clone --depth 1 https://github.com/spack/spack && \
-    cd ./spack && . ./share/spack/setup-env.sh && \
-    cd /opt && \
-    spack install metall && \
-    git clone -b update-imports https://github.com/researchapps/havoqgt
-RUN . /opt/spack/share/spack/setup-env.sh && \
-    spack load metall && \
-    cd /opt/havoqgt && git checkout -b develop && mkdir build_dir && cd build_dir && \
-    cmake ../ \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_CXX_FLAGS="-lrt -lstdc++fs -lpthread -I/opt/spack/opt/spack/linux-zen4/metall-0.30-ezucuvx4aqvjuofyklnbampsj3lhmprh/include" \
-      -DHAVOQGT_BUILD_TEST=TRUE \
-      -DMPIEXEC_NUMPROC_FLAG="-n" && make && make install
+RUN git clone --recurse-submodules https://github.com/LLNL/RAJAPerf && \
+    cd RAJAPerf && \
+    mkdir build && cd build && \
+    cmake -DCMAKE_CXX_COMPILER=g++ -DENABLE_MPI=On -DCMAKE_BUILD_TYPE=Release -DRAJA_ENABLE_WARNINGS=On -DRAJA_ENABLE_WARNINGS_AS_ERRORS=On -DENABLE_OPENMP=On .. && \
+    make -j 4
 
 # Finally, install oras for saving artifacts
 RUN export VERSION="1.2.0" && \
@@ -229,3 +221,6 @@ RUN export VERSION="1.2.0" && \
     tar -zxf oras_${VERSION}_*.tar.gz -C oras-install/ && \
     mv oras-install/oras /usr/local/bin/ && \
     rm -rf oras_${VERSION}_*.tar.gz oras-install/
+
+#  flux run -N2 -n 16 ./build/bin/raja-perf.exe 
+WORKDIR /opt/RAJAPerf

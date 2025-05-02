@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-# docker build -f Dockerfile -t ghcr.io/rse-ops/havoqgt:flux .
+# docker build -f Dockerfile -t ghcr.io/rse-ops/likwid:flux .
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -208,19 +208,9 @@ RUN apt-get update && \
 
 WORKDIR /opt
 
-RUN git clone --depth 1 https://github.com/spack/spack && \
-    cd ./spack && . ./share/spack/setup-env.sh && \
-    cd /opt && \
-    spack install metall && \
-    git clone -b update-imports https://github.com/researchapps/havoqgt
-RUN . /opt/spack/share/spack/setup-env.sh && \
-    spack load metall && \
-    cd /opt/havoqgt && git checkout -b develop && mkdir build_dir && cd build_dir && \
-    cmake ../ \
-      -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_CXX_FLAGS="-lrt -lstdc++fs -lpthread -I/opt/spack/opt/spack/linux-zen4/metall-0.30-ezucuvx4aqvjuofyklnbampsj3lhmprh/include" \
-      -DHAVOQGT_BUILD_TEST=TRUE \
-      -DMPIEXEC_NUMPROC_FLAG="-n" && make && make install
+RUN VERSION=stable && wget http://ftp.fau.de/pub/likwid/likwid-$VERSION.tar.gz && \
+    tar -xaf likwid-$VERSION.tar.gz && rm likwid-$VERSION.tar.gz && \
+    cd likwid-* && make && make install
 
 # Finally, install oras for saving artifacts
 RUN export VERSION="1.2.0" && \
