@@ -1,8 +1,7 @@
 FROM ubuntu:22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-#  docker build -f Dockerfile -t ghcr.io/rse-ops/nas-parallel-benchmarks .
-#  docker push ghcr.io/rse-ops/amg2023:intel-mpi
+# docker build -f Dockerfile -t ghcr.io/rse-ops/nas-parallel-benchmarks .
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
@@ -33,7 +32,7 @@ RUN mkdir /opt/spack-environment \
     &&   echo "  - flux-core" \
     &&   echo "  - pmix@4.2.2" \
     &&   echo "  - flux-pmix" \
-    &&   echo "  - npb classes='S,W,A,B,C,D,E,F' names='is,ep,cg,mg,ft,bt,sp,lu'" \
+    &&   echo "  - npb" \
     &&   echo "  concretizer:" \
     &&	 echo "    unify: true" \
     &&   echo "  config:" \
@@ -75,15 +74,27 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends 
     openssh-client \
     dnsutils \
     curl \
+    wget \
+    gfortran \
+    build-essential \
     && apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
 # Finally, install oras for saving artifacts
-RUN export VERSION="1.1.0" && \
+RUN export VERSION="1.2.0" && \
     curl -LO "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${VERSION}_linux_amd64.tar.gz" && \
     mkdir -p oras-install/ && \
     tar -zxf oras_${VERSION}_*.tar.gz -C oras-install/ && \
     mv oras-install/oras /usr/local/bin/ && \
     rm -rf oras_${VERSION}_*.tar.gz oras-install/
-   
+
+# Spack only installs is...
+RUN wget https://www.nas.nasa.gov/assets/npb/NPB3.4.2.tar.gz && \
+   tar xvzf NPB3.4.2.tar.gz
+
+COPY ./make.def ./suite.def /opt/NPB3.4.2/NPB3.4-OMP/config/
+RUN . /opt/spack-environment/spack/share/spack/setup-env.sh && spack env activate /opt/spack-environment && \
+     cd /opt/NPB3.4.2/NPB3.4-OMP && make -j suite && \
+     cp bin/* /usr/local/bin
+    

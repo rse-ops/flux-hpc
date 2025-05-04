@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-# docker build -t ghcr.io/rse-ops/branson:flux .
+# docker build -f Dockerfile.spack -t ghcr.io/rse-ops/pennant:flux .
 
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
@@ -25,7 +25,6 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install \
     build-essential \
     software-properties-common
 
-# https://github.com/EnzymeAD/Enzyme
 RUN mkdir /opt/spack-environment \
     &&  (echo "spack:" \
     &&   echo "  specs:" \
@@ -33,13 +32,13 @@ RUN mkdir /opt/spack-environment \
     &&   echo "  - flux-core" \
     &&   echo "  - pmix@4.2.2" \
     &&   echo "  - flux-pmix" \
-    &&   echo "  - branson" \
+    &&   echo "  - pennant" \
     &&   echo "  concretizer:" \
     &&	 echo "    unify: true" \
     &&   echo "  config:" \
     &&   echo "    install_tree: /opt/software" \
     &&   echo "  view: /opt/view") > /opt/spack-environment/spack.yaml
-
+    
 RUN cd /opt/spack-environment \
     && git clone --depth 1 --branch v0.22.1 https://github.com/spack/spack.git \
     && . spack/share/spack/setup-env.sh \
@@ -67,15 +66,15 @@ COPY --from=builder /etc/profile.d/z10_spack_environment.sh /etc/profile.d/z10_s
 RUN apt-get update
 RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends \
     libatomic1 \
-    git \
-    python3 \
     libnuma-dev \
     libgomp1 \
+    python3-dev \
     ca-certificates \
     openssh-server \
     openssh-client \
     dnsutils \
     curl \
+    git \
     && apt-get clean \
     && apt-get autoremove \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
@@ -88,8 +87,6 @@ RUN export VERSION="1.2.0" && \
     mv oras-install/oras /usr/local/bin/ && \
     rm -rf oras_${VERSION}_*.tar.gz oras-install/
 
-WORKDIR /opt
-RUN git clone https://github.com/lanl/branson
-WORKDIR /opt/branson
-# 3D_hohlraum_multi_node.xml
-ENV PATH=/opt/view/bin:$PATH
+RUN git clone https://github.com/llnl/pennant /opt/pennant
+WORKDIR /opt/pennant
+

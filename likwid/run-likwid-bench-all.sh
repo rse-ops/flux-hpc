@@ -1,0 +1,24 @@
+#!/bin/bash
+
+workgroup=${1:-S0:100MB}
+
+for command in clcopy clload clstore copy copy_avx copy_avx512 copy_mem copy_mem_avx copy_mem_avx512 copy_mem_sse copy_sse daxpy daxpy_avx daxpy_avx512 daxpy_avx512_fma daxpy_avx_fma daxpy_mem_avx daxpy_mem_avx512 daxpy_mem_avx512_fma daxpy_mem_avx_fma daxpy_mem_sse daxpy_mem_sse_fma daxpy_sp daxpy_sp_avx daxpy_sp_avx512 daxpy_sp_avx512_fma daxpy_sp_avx_fma daxpy_sp_mem_avx daxpy_sp_mem_avx512 daxpy_sp_mem_avx512_fma daxpy_sp_mem_avx_fma daxpy_sp_mem_sse daxpy_sp_mem_sse_fma daxpy_sp_sse daxpy_sp_sse_fma daxpy_sse daxpy_sse_fma ddot ddot_avx ddot_avx512 ddot_sp ddot_sp_avx ddot_sp_avx512 ddot_sp_sse ddot_sse divide load load_avx load_avx512 load_mem load_sse peakflops peakflops_avx peakflops_avx512 peakflops_avx512_fma peakflops_avx_fma peakflops_sp peakflops_sp_avx peakflops_sp_avx512 peakflops_sp_avx512_fma peakflops_sp_avx_fma peakflops_sp_sse peakflops_sse store store_avx store_avx512 store_mem store_mem_avx store_mem_avx512 store_mem_sse store_sse stream stream_avx stream_avx512 stream_avx512_fma stream_avx_fma stream_mem stream_mem_avx stream_mem_avx512 stream_mem_avx_fma stream_mem_sse stream_mem_sse_fma stream_sp stream_sp_avx stream_sp_avx512 stream_sp_avx512_fma stream_sp_avx_fma stream_sp_mem stream_sp_mem_avx stream_sp_mem_avx512 stream_sp_mem_avx512_fma stream_sp_mem_avx_fma stream_sp_mem_sse stream_sp_mem_sse_fma stream_sp_sse stream_sp_sse_fma stream_sse stream_sse_fma sum sum_avx sum_avx512 sum_sp sum_sp_avx sum_sp_avx512 sum_sp_sse sum_sse triad triad_avx triad_avx512 triad_avx512_fma triad_avx_fma triad_mem_avx triad_mem_avx512 triad_mem_avx512_fma triad_mem_avx_fma triad_mem_sse triad_mem_sse_fma triad_sp triad_sp_avx triad_sp_avx512 triad_sp_avx512_fma triad_sp_avx_fma triad_sp_mem_avx triad_sp_mem_avx512 triad_sp_mem_avx512_fma triad_sp_mem_avx_fma triad_sp_mem_sse triad_sp_mem_sse_fma triad_sp_sse triad_sp_sse_fma triad_sse triad_sse_fma update update_avx update_avx512 update_sp update_sp_avx update_sp_avx512 update_sp_sse update_sse
+  do
+  echo BENCHMARK START $command
+  likwid-bench -t $command -W ${workgroup}
+  retval=$?
+  if [[ "${retval}" != "0" ]]; then
+     echo "issue with ${command}"
+     break
+  fi
+  echo BENCHMARK END
+done
+
+
+for command in clcopy clload clstore copy copy_avx copy_avx512 copy_mem copy_mem_avx copy_mem_avx512 copy_mem_sse copy_sse daxpy daxpy_avx daxpy_avx512 daxpy_avx512_fma daxpy_avx_fma daxpy_mem_avx daxpy_mem_avx512 daxpy_mem_avx512_fma daxpy_mem_avx_fma daxpy_mem_sse daxpy_mem_sse_fma daxpy_sp daxpy_sp_avx daxpy_sp_avx512 daxpy_sp_avx512_fma daxpy_sp_avx_fma daxpy_sp_mem_avx daxpy_sp_mem_avx512 daxpy_sp_mem_avx512_fma daxpy_sp_mem_avx_fma daxpy_sp_mem_sse daxpy_sp_mem_sse_fma daxpy_sp_sse daxpy_sp_sse_fma daxpy_sse daxpy_sse_fma ddot ddot_avx ddot_avx512 ddot_sp ddot_sp_avx ddot_sp_avx512 ddot_sp_sse ddot_sse divide load load_avx load_avx512 load_mem load_sse peakflops peakflops_avx peakflops_avx512 peakflops_avx512_fma peakflops_avx_fma peakflops_sp peakflops_sp_avx peakflops_sp_avx512 peakflops_sp_avx512_fma peakflops_sp_avx_fma peakflops_sp_sse peakflops_sse store store_avx store_avx512 store_mem store_mem_avx store_mem_avx512 store_mem_sse store_sse stream stream_avx stream_avx512 stream_avx512_fma stream_avx_fma stream_mem stream_mem_avx stream_mem_avx512 stream_mem_avx_fma stream_mem_sse stream_mem_sse_fma stream_sp stream_sp_avx stream_sp_avx512 stream_sp_avx512_fma stream_sp_avx_fma stream_sp_mem stream_sp_mem_avx stream_sp_mem_avx512 stream_sp_mem_avx512_fma stream_sp_mem_avx_fma stream_sp_mem_sse stream_sp_mem_sse_fma stream_sp_sse stream_sp_sse_fma stream_sse stream_sse_fma sum sum_avx sum_avx512 sum_sp sum_sp_avx sum_sp_avx512 sum_sp_sse sum_sse triad triad_avx triad_avx512 triad_avx512_fma triad_avx_fma triad_mem_avx triad_mem_avx512 triad_mem_avx512_fma triad_mem_avx_fma triad_mem_sse triad_mem_sse_fma triad_sp triad_sp_avx triad_sp_avx512 triad_sp_avx512_fma triad_sp_avx_fma triad_sp_mem_avx triad_sp_mem_avx512 triad_sp_mem_avx512_fma triad_sp_mem_avx_fma triad_sp_mem_sse triad_sp_mem_sse_fma triad_sp_sse triad_sp_sse_fma triad_sse triad_sse_fma update update_avx update_avx512 update_sp update_sp_avx update_sp_avx512 update_sp_sse update_sse
+  do
+  echo BENCHMARK START $command
+  likwid-bench -t $command -W ${workgroup}
+  echo BENCHMARK END
+done
+

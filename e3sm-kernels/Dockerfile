@@ -80,7 +80,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get -y install --no-install-recommends 
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
     
 # Finally, install oras for saving artifacts
-RUN export VERSION="1.1.0" && \
+RUN export VERSION="1.2.0" && \
     curl -LO "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${VERSION}_linux_amd64.tar.gz" && \
     mkdir -p oras-install/ && \
     tar -zxf oras_${VERSION}_*.tar.gz -C oras-install/ && \

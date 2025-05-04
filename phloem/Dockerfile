@@ -1,7 +1,7 @@
 FROM ubuntu:22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-# docker build -f Dockerfile -t ghcr.io/rse-ops/likwid:flux .
+# docker build -f Dockerfile -t ghcr.io/rse-ops/phloem:flux .
 
 ENV DEBIAN_FRONTEND=noninteractive
 
@@ -208,9 +208,15 @@ RUN apt-get update && \
 
 WORKDIR /opt
 
-RUN VERSION=stable && wget http://ftp.fau.de/pub/likwid/likwid-$VERSION.tar.gz && \
-    tar -xaf likwid-$VERSION.tar.gz && rm likwid-$VERSION.tar.gz && \
-    cd likwid-* && make && make install
+RUN git clone https://github.com/LLNL/phloem && \
+    cd phloem && mkdir -p /usr/include/sys && \
+    ln -s /usr/include/x86_64-linux-gnu/sys/resource.h /usr/include/sys/resource.h && \
+    make && cp ./mpigraph-1.6/mpiGraph/mpiGraph /usr/bin/ && \
+    cp ./mpigraph-1.6/mpiBench/mpiBench /usr/bin/ && \
+    cp presta-1.3.0/latency.message.sizes /usr/bin/ && \
+    cp presta-1.3.0/com /usr/bin/ && \
+    cp presta-1.3.0/bw.message.sizes /usr/bin/ && \
+    cp sqmr-1.1.0/sqmr /usr/bin/   
 
 # Finally, install oras for saving artifacts
 RUN export VERSION="1.2.0" && \
@@ -220,6 +226,4 @@ RUN export VERSION="1.2.0" && \
     mv oras-install/oras /usr/local/bin/ && \
     rm -rf oras_${VERSION}_*.tar.gz oras-install/
 
-# Add script for all commands
-COPY ./run-likwid-bench-all.sh /usr/bin/likwid-bench-all
-RUN chmod +x /usr/bin/likwid-bench-all
+WORKDIR /opt/phloem
