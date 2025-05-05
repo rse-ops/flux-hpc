@@ -1,17 +1,9 @@
-FROM ghcr.io/flux-framework/flux-k8s-nio-data as base
-FROM ubuntu:22.04
-
-# docker build -t ghcr.io/converged-computing/metric-qmcpack:flux .
-
-# This has the data needed by the dummy workflow
-COPY --from=base /NiO-fcc-supertwist111-supershift000-S8.h5 /NiO-fcc-supertwist111-supershift000-S8.h5
-ARG qmcpack_version=3.16.0
-ENV qmcpack_version=${qmcpack_version}
+FROM ubuntu:22.04 AS builder
 ENV DEBIAN_FRONTEND=noninteractive
 
-# docker build -t qmc .
-# command: qmcpack NiO-fcc-S8-dmc-strongscale.xml
-# workdir: /coral2/NiO/dmc-a32-e384-batched_driver-DU32/
+# docker build -f Dockerfile -t ghcr.io/rse-ops/havoqgt:flux .
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get install -y build-essential \
     tar \
@@ -32,14 +24,6 @@ RUN apt-get update && apt-get install -y build-essential \
     libhdf5-dev \
     libboost-all-dev \
     && apt-get clean
-
-# Build command
-#  docker build -t ghcr.io/converged-computing/metric-kripke-cpu .
-#  docker push ghcr.io/converged-computing/metric-kripke-cpu
-
-# on AMD
-#  docker build -t ghcr.io/converged-computing/metric-kripke-cpu:zen4 .
-#  docker push ghcr.io/converged-computing/metric-kripke-cpu
 
 # Utilities
 RUN apt-get update && \
@@ -224,19 +208,24 @@ RUN apt-get update && \
 
 WORKDIR /opt
 
-# Install QMCpack
-RUN wget https://github.com/QMCPACK/qmcpack/archive/refs/tags/v${qmcpack_version}.tar.gz && \
-    tar -zxvf v${qmcpack_version}.tar.gz && \
-    cd qmcpack-${qmcpack_version}/build  && \
-    cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DENABLE_SOA=1 -DQMC_MIXED_PRECISION=1 .. && make;
+RUN git clone --depth 1 https://github.com/spack/spack && \
+    cd ./spack && . ./share/spack/setup-env.sh && \
+    cd /opt && \
+    spack install metall && \
+    git clone -b update-imports https://github.com/researchapps/havoqgt
+RUN . /opt/spack/share/spack/setup-env.sh && \
+    spack load metall && \
+    cd /opt/havoqgt && git checkout -b develop && mkdir build_dir && cd build_dir && \
+    cmake ../ \
+      -DCMAKE_BUILD_TYPE=Release \
+      -DCMAKE_CXX_FLAGS="-lrt -lstdc++fs -lpthread -I/opt/spack/opt/spack/linux-zen4/metall-0.30-ezucuvx4aqvjuofyklnbampsj3lhmprh/include" \
+      -DHAVOQGT_BUILD_TEST=TRUE \
+      -DMPIEXEC_NUMPROC_FLAG="-n" && make && make install
 
-RUN cp -R /opt/qmcpack-${qmcpack_version}/build/bin/qmcpack /usr/local/bin && \
-    mkdir -p /coral2/NiO
-
-# This is for reference in case we need to run the ctest that helps in generating the run config for strong scaling experiment
-#    && cmake -DCMAKE_C_COMPILER=mpicc -DCMAKE_CXX_COMPILER=mpicxx -DENABLE_SOA=1 -DQMC_MIXED_PRECISION=1 -DQMC_DATA=/coral2 .. && make;
-ENV PATH=/opt/qmcpack:$PATH
-
-COPY ./NiO/nio_data.tgz /coral2/NiO/nio_data.tgz
-RUN cd /coral2/NiO/ && tar -xzvf nio_data.tgz && \
-   mv /NiO-fcc-supertwist111-supershift000-S8.h5 /coral2/NiO/
+# Finally, install oras for saving artifacts
+RUN export VERSION="1.2.0" && \
+    curl -LO "https://github.com/oras-project/oras/releases/download/v${VERSION}/oras_${VERSION}_linux_amd64.tar.gz" && \
+    mkdir -p oras-install/ && \
+    tar -zxf oras_${VERSION}_*.tar.gz -C oras-install/ && \
+    mv oras-install/oras /usr/local/bin/ && \
+    rm -rf oras_${VERSION}_*.tar.gz oras-install/
